@@ -1,0 +1,22 @@
+﻿using PowerEntity.Model;
+using Swashbuckle.AspNetCore.Filters;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace PowerEntity.SwaggerExamples.Requests
+{
+    public class AddressesExample : IExamplesProvider<List<Address>>
+    {
+        public List<Address> GetExamples()
+        {
+            var addresses = new List<Address>();
+
+            addresses.Add(new Address(1, "1", "Principal", "Rua Áurea, 1234, 1100-064 Lisboa"));
+            addresses.Add(new Address(2, "2", "Fiscal", "Rua da Prata, 2045, 1100-413 Lisboa"));
+
+            return addresses;
+        }
+    }
+}
