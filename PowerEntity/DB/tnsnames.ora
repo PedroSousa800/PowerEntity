@@ -1,0 +1,12 @@
+dbpowerentity_high = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.eu-marseille-1.oraclecloud.com))(connect_data=(service_name=gecf191fd1ce732_dbpowerentity_high.adb.oraclecloud.com))(security=(ssl_server_cert_dn="CN=adb.eu-marseille-1.oraclecloud.com, OU=Oracle ADB MARSEILLE, O=Oracle Corporation, L=Redwood City, ST=California, C=US")))
+
+dbpowerentity_low = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.eu-marseille-1.oraclecloud.com))(connect_data=(service_name=gecf191fd1ce732_dbpowerentity_low.adb.oraclecloud.com))(security=(ssl_server_cert_dn="CN=adb.eu-marseille-1.oraclecloud.com, OU=Oracle ADB MARSEILLE, O=Oracle Corporation, L=Redwood City, ST=California, C=US")))
+
+dbpowerentity_medium = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.eu-marseille-1.oraclecloud.com))(connect_data=(service_name=gecf191fd1ce732_dbpowerentity_medium.adb.oraclecloud.com))(security=(ssl_server_cert_dn="CN=adb.eu-marseille-1.oraclecloud.com, OU=Oracle ADB MARSEILLE, O=Oracle Corporation, L=Redwood City, ST=California, C=US")))
+
+dbpowerentity_tp = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.eu-marseille-1.oraclecloud.com))(connect_data=(service_name=gecf191fd1ce732_dbpowerentity_tp.adb.oraclecloud.com))(security=(ssl_server_cert_dn="CN=adb.eu-marseille-1.oraclecloud.com, OU=Oracle ADB MARSEILLE, O=Oracle Corporation, L=Redwood City, ST=California, C=US")))
+
+dbpowerentity_tpurgent = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.eu-marseille-1.oraclecloud.com))(connect_data=(service_name=gecf191fd1ce732_dbpowerentity_tpurgent.adb.oraclecloud.com))(security=(ssl_server_cert_dn="CN=adb.eu-marseille-1.oraclecloud.com, OU=Oracle ADB MARSEILLE, O=Oracle Corporation, L=Redwood City, ST=California, C=US")))
+
+
+

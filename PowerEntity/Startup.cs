@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Oracle.ManagedDataAccess.Client;
 
 namespace PowerEntity
 {
@@ -24,6 +25,7 @@ namespace PowerEntity
         }
 
         public IConfiguration Configuration { get; }
+        public static string ConnectionString { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -48,9 +50,10 @@ namespace PowerEntity
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PowerEntity v1"));
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PowerEntity v1"));
 
             app.UseRouting();
 
@@ -60,6 +63,22 @@ namespace PowerEntity
             {
                 endpoints.MapControllers();
             });
+
+            ConnectionString = "User ID=ADMIN; Password=TestASPNET2021; Data Source=dbpowerentity_high";
+
+            if (env.IsDevelopment())
+            {
+                OracleConfiguration.TnsAdmin = @"C:\Pedro\Treinamento\C#\TestarConexaoWeb\TestarConexaoWeb\DB";
+            }
+            else
+            {
+                OracleConfiguration.TnsAdmin = @".\DB";
+            }
+
+            OracleConfiguration.WalletLocation = OracleConfiguration.TnsAdmin;
+
+            OracleConfiguration.CommandTimeout = 120;
+
         }
     }
 }

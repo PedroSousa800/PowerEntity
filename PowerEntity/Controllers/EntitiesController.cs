@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Data.OracleClient;
 using System.Linq;
 using System.Threading.Tasks;
 using PowerEntity.Tools;
@@ -14,6 +13,7 @@ using PowerEntity.Tools.UpperTypes;
 using Tools;
 using PowerEntity.Model;
 using System.Globalization;
+using Oracle.ManagedDataAccess.Client;
 
 namespace PowerEntity.Controllers
 {
@@ -61,16 +61,19 @@ namespace PowerEntity.Controllers
 
             string xmlReturn;
 
-            using (OracleConnection objConn = new OracleConnection("Data Source=(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521)))(CONNECT_DATA = (SID = xe))); User ID=EDM; Password=edm01"))
+            using (OracleConnection objConn = new OracleConnection())
             {
+
+                objConn.ConnectionString = Startup.ConnectionString;
+
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
                 objCmd.CommandText = "PKG_EDM_API.pro_get_entity";
                 objCmd.CommandType = CommandType.StoredProcedure;
-                objCmd.Parameters.Add("p_entity_id", OracleType.VarChar, 32000).Value = IdEntity;
-                objCmd.Parameters.Add("p_out_entity_type", OracleType.VarChar, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleType.Number).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_dserror", OracleType.VarChar, 4000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
+                objCmd.Parameters.Add("p_out_entity_type", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
                 {
@@ -78,16 +81,16 @@ namespace PowerEntity.Controllers
                     objCmd.ExecuteNonQuery();
 
                     xmlReturn = objCmd.Parameters["p_out_entity_type"].Value.ToString();
-                    var _cderror = objCmd.Parameters["p_cderror"].Value.ToString();
+                    var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
                     objConn.Close();
 
-                    if (_cderror != "")
+                    if (_cderror != 0)
                     {
                         var _errorResponse = new ErrorResponse(_cderror, _dserror);
 
-                        if (_cderror == "10001")
+                        if (_cderror == 10001)
                         {
                             return NotFound(_errorResponse);
                         }
@@ -146,25 +149,28 @@ namespace PowerEntity.Controllers
 
             string xmlReturn;
 
-            using (OracleConnection objConn = new OracleConnection("Data Source=(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521)))(CONNECT_DATA = (SID = xe))); User ID=EDM; Password=edm01"))
+            using (OracleConnection objConn = new OracleConnection())
             {
+
+                objConn.ConnectionString = Startup.ConnectionString;
+
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
                 objCmd.CommandText = "PKG_EDM_API.pro_mrg_entity_new";
                 objCmd.CommandType = CommandType.StoredProcedure;
-                objCmd.Parameters.Add("p_in_entity_type", OracleType.VarChar, 32000).Value = xmlEntity;
-                objCmd.Parameters.Add("p_out_entity_type", OracleType.VarChar, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleType.Number).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_dserror", OracleType.VarChar, 4000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_in_entity_type", OracleDbType.Varchar2, 32000).Value = xmlEntity;
+                objCmd.Parameters.Add("p_out_entity_type", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
                 {
                     objConn.Open();
                     objCmd.ExecuteNonQuery();
 
-                    var _cderror = objCmd.Parameters["p_cderror"].Value.ToString();
+                    var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
 
-                    if (_cderror != "")
+                    if (_cderror != 0)
                     {
                         var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
@@ -227,25 +233,28 @@ namespace PowerEntity.Controllers
 
             string xmlReturn;
 
-            using (OracleConnection objConn = new OracleConnection("Data Source=(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521)))(CONNECT_DATA = (SID = xe))); User ID=EDM; Password=edm01"))
+            using (OracleConnection objConn = new OracleConnection())
             {
+
+                objConn.ConnectionString = Startup.ConnectionString;
+
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
                 objCmd.CommandText = "PKG_EDM_API.pro_mrg_entity_new";
                 objCmd.CommandType = CommandType.StoredProcedure;
-                objCmd.Parameters.Add("p_in_entity_type", OracleType.VarChar, 32000).Value = xmlEntity;
-                objCmd.Parameters.Add("p_out_entity_type", OracleType.VarChar, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleType.Number).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_dserror", OracleType.VarChar, 4000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_in_entity_type", OracleDbType.Varchar2, 32000).Value = xmlEntity;
+                objCmd.Parameters.Add("p_out_entity_type", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
                 {
                     objConn.Open();
                     objCmd.ExecuteNonQuery();
 
-                    var _cderror = objCmd.Parameters["p_cderror"].Value.ToString();
+                    var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
 
-                    if (_cderror != "")
+                    if (_cderror != 0)
                     {
                         var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
@@ -313,16 +322,19 @@ namespace PowerEntity.Controllers
 
             string xmlReturn;
 
-            using (OracleConnection objConn = new OracleConnection("Data Source=(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521)))(CONNECT_DATA = (SID = xe))); User ID=EDM; Password=edm01"))
+            using (OracleConnection objConn = new OracleConnection())
             {
+
+                objConn.ConnectionString = Startup.ConnectionString;
+
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
                 objCmd.CommandText = "PKG_EDM_API.pro_get_addresses";
                 objCmd.CommandType = CommandType.StoredProcedure;
-                objCmd.Parameters.Add("p_entity_id", OracleType.VarChar, 32000).Value = IdEntity;
-                objCmd.Parameters.Add("p_out_addresses_xml", OracleType.VarChar, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleType.Number).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_dserror", OracleType.VarChar, 4000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
+                objCmd.Parameters.Add("p_out_addresses_xml", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
                 {
@@ -330,16 +342,16 @@ namespace PowerEntity.Controllers
                     objCmd.ExecuteNonQuery();
 
                     xmlReturn = objCmd.Parameters["p_out_addresses_xml"].Value.ToString();
-                    var _cderror = objCmd.Parameters["p_cderror"].Value.ToString();
+                    var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
                     objConn.Close();
 
-                    if (_cderror != "")
+                    if (_cderror != 0)
                     {
                         var _errorResponse = new ErrorResponse(_cderror, _dserror);
 
-                        if (_cderror == "10001")
+                        if (_cderror == 10001)
                         {
                             return NotFound(_errorResponse);
                         }
@@ -401,17 +413,20 @@ namespace PowerEntity.Controllers
 
             string xmlReturn;
 
-            using (OracleConnection objConn = new OracleConnection("Data Source=(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521)))(CONNECT_DATA = (SID = xe))); User ID=EDM; Password=edm01"))
+            using (OracleConnection objConn = new OracleConnection())
             {
+
+                objConn.ConnectionString = Startup.ConnectionString;
+
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
                 objCmd.CommandText = "PKG_EDM_API.pro_set_addresses";
                 objCmd.CommandType = CommandType.StoredProcedure;
-                objCmd.Parameters.Add("p_entity_id", OracleType.VarChar, 32000).Value = IdEntity;
-                objCmd.Parameters.Add("p_in_addresses_xml", OracleType.VarChar, 32000).Value = xmlAddresses;
-                objCmd.Parameters.Add("p_out_addresses_xml", OracleType.VarChar, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleType.Number).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_dserror", OracleType.VarChar, 4000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
+                objCmd.Parameters.Add("p_in_addresses_xml", OracleDbType.Varchar2, 32000).Value = xmlAddresses;
+                objCmd.Parameters.Add("p_out_addresses_xml", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
                 {
@@ -419,16 +434,16 @@ namespace PowerEntity.Controllers
                     objCmd.ExecuteNonQuery();
 
                     xmlReturn = objCmd.Parameters["p_out_addresses_xml"].Value.ToString();
-                    var _cderror = objCmd.Parameters["p_cderror"].Value.ToString();
+                    var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
                     objConn.Close();
 
-                    if (_cderror != "")
+                    if (_cderror != 0)
                     {
                         var _errorResponse = new ErrorResponse(_cderror, _dserror);
 
-                        if (_cderror == "10001")
+                        if (_cderror == 10001)
                         {
                             return NotFound(_errorResponse);
                         }
@@ -492,16 +507,19 @@ namespace PowerEntity.Controllers
 
             string xmlReturn;
 
-            using (OracleConnection objConn = new OracleConnection("Data Source=(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521)))(CONNECT_DATA = (SID = xe))); User ID=EDM; Password=edm01"))
+            using (OracleConnection objConn = new OracleConnection())
             {
+
+                objConn.ConnectionString = Startup.ConnectionString;
+
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
                 objCmd.CommandText = "PKG_EDM_API.pro_get_bank_accounts";
                 objCmd.CommandType = CommandType.StoredProcedure;
-                objCmd.Parameters.Add("p_entity_id", OracleType.VarChar, 32000).Value = IdEntity;
-                objCmd.Parameters.Add("p_out_bank_account_xml", OracleType.VarChar, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleType.Number).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_dserror", OracleType.VarChar, 4000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
+                objCmd.Parameters.Add("p_out_bank_account_xml", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
                 {
@@ -509,16 +527,16 @@ namespace PowerEntity.Controllers
                     objCmd.ExecuteNonQuery();
 
                     xmlReturn = objCmd.Parameters["p_out_bank_account_xml"].Value.ToString();
-                    var _cderror = objCmd.Parameters["p_cderror"].Value.ToString();
+                    var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
                     objConn.Close();
 
-                    if (_cderror != "")
+                    if (_cderror != 0)
                     {
                         var _errorResponse = new ErrorResponse(_cderror, _dserror);
 
-                        if (_cderror == "10001")
+                        if (_cderror == 10001)
                         {
                             return NotFound(_errorResponse);
                         }
@@ -578,17 +596,20 @@ namespace PowerEntity.Controllers
 
             string xmlReturn;
 
-            using (OracleConnection objConn = new OracleConnection("Data Source=(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521)))(CONNECT_DATA = (SID = xe))); User ID=EDM; Password=edm01"))
+            using (OracleConnection objConn = new OracleConnection())
             {
+
+                objConn.ConnectionString = Startup.ConnectionString;
+
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
                 objCmd.CommandText = "PKG_EDM_API.pro_set_bank_accounts";
                 objCmd.CommandType = CommandType.StoredProcedure;
-                objCmd.Parameters.Add("p_entity_id", OracleType.VarChar, 32000).Value = IdEntity;
-                objCmd.Parameters.Add("p_in_bank_account_xml", OracleType.VarChar, 32000).Value = xmlBankAccounts;
-                objCmd.Parameters.Add("p_out_bank_account_xml", OracleType.VarChar, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleType.Number).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_dserror", OracleType.VarChar, 4000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
+                objCmd.Parameters.Add("p_in_bank_account_xml", OracleDbType.Varchar2, 32000).Value = xmlBankAccounts;
+                objCmd.Parameters.Add("p_out_bank_account_xml", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
                 {
@@ -596,16 +617,16 @@ namespace PowerEntity.Controllers
                     objCmd.ExecuteNonQuery();
 
                     xmlReturn = objCmd.Parameters["p_out_bank_account_xml"].Value.ToString();
-                    var _cderror = objCmd.Parameters["p_cderror"].Value.ToString();
+                    var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
                     objConn.Close();
 
-                    if (_cderror != "")
+                    if (_cderror != 0)
                     {
                         var _errorResponse = new ErrorResponse(_cderror, _dserror);
 
-                        if (_cderror == "10001")
+                        if (_cderror == 10001)
                         {
                             return NotFound(_errorResponse);
                         }
@@ -671,16 +692,19 @@ namespace PowerEntity.Controllers
 
             string xmlReturn;
 
-            using (OracleConnection objConn = new OracleConnection("Data Source=(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521)))(CONNECT_DATA = (SID = xe))); User ID=EDM; Password=edm01"))
+            using (OracleConnection objConn = new OracleConnection())
             {
+
+                objConn.ConnectionString = Startup.ConnectionString;
+
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
                 objCmd.CommandText = "PKG_EDM_API.pro_get_documents";
                 objCmd.CommandType = CommandType.StoredProcedure;
-                objCmd.Parameters.Add("p_entity_id", OracleType.VarChar, 32000).Value = IdEntity;
-                objCmd.Parameters.Add("p_out_documents_xml", OracleType.VarChar, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleType.Number).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_dserror", OracleType.VarChar, 4000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
+                objCmd.Parameters.Add("p_out_documents_xml", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
                 {
@@ -688,16 +712,16 @@ namespace PowerEntity.Controllers
                     objCmd.ExecuteNonQuery();
 
                     xmlReturn = objCmd.Parameters["p_out_documents_xml"].Value.ToString();
-                    var _cderror = objCmd.Parameters["p_cderror"].Value.ToString();
+                    var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
                     objConn.Close();
 
-                    if (_cderror != "")
+                    if (_cderror != 0)
                     {
                         var _errorResponse = new ErrorResponse(_cderror, _dserror);
 
-                        if (_cderror == "10001")
+                        if (_cderror == 10001)
                         {
                             return NotFound(_errorResponse);
                         }
@@ -759,17 +783,20 @@ namespace PowerEntity.Controllers
 
             string xmlReturn;
 
-            using (OracleConnection objConn = new OracleConnection("Data Source=(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521)))(CONNECT_DATA = (SID = xe))); User ID=EDM; Password=edm01"))
+            using (OracleConnection objConn = new OracleConnection())
             {
+
+                objConn.ConnectionString = Startup.ConnectionString;
+
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
                 objCmd.CommandText = "PKG_EDM_API.pro_set_documents";
                 objCmd.CommandType = CommandType.StoredProcedure;
-                objCmd.Parameters.Add("p_entity_id", OracleType.VarChar, 32000).Value = IdEntity;
-                objCmd.Parameters.Add("p_in_documents_xml", OracleType.VarChar, 32000).Value = xmlDocuments;
-                objCmd.Parameters.Add("p_out_documents_xml", OracleType.VarChar, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleType.Number).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_dserror", OracleType.VarChar, 4000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
+                objCmd.Parameters.Add("p_in_documents_xml", OracleDbType.Varchar2, 32000).Value = xmlDocuments;
+                objCmd.Parameters.Add("p_out_documents_xml", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
                 {
@@ -778,16 +805,16 @@ namespace PowerEntity.Controllers
 
 
                     xmlReturn = objCmd.Parameters["p_out_documents_xml"].Value.ToString();
-                    var _cderror = objCmd.Parameters["p_cderror"].Value.ToString();
+                    var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
                     objConn.Close();
 
-                    if (_cderror != "")
+                    if (_cderror != 0)
                     {
                         var _errorResponse = new ErrorResponse(_cderror, _dserror);
 
-                        if (_cderror == "10001")
+                        if (_cderror == 10001)
                         {
                             return NotFound(_errorResponse);
                         }
@@ -830,7 +857,7 @@ namespace PowerEntity.Controllers
                                                      [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
                                                      [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
                                                      [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser)
-                                                                 
+
 
         {
             var entity = new Entity();
@@ -851,7 +878,7 @@ namespace PowerEntity.Controllers
                                                     "N", null,
                                                     "N", "Portugal",
                                                     _nationalities);
-            
+
             entity.type.individual = new Individual("Ana Leitão",
                                                     DateTime.ParseExact("1952-06-06", "yyyy-MM-dd", CultureInfo.InvariantCulture),
                                                     "M", null,

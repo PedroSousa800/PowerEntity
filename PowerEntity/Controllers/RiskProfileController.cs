@@ -7,13 +7,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Data.OracleClient;
 using System.Linq;
 using System.Threading.Tasks;
 using PowerEntity.Model;
 using PowerEntity.Tools;
 using PowerEntity.Tools.UpperTypes;
 using Tools;
+using Oracle.ManagedDataAccess.Client;
 
 namespace PowerEntity.Controllers
 {
@@ -31,21 +31,6 @@ namespace PowerEntity.Controllers
         public RiskProfileController(ILogger<RiskProfileController> logger)
         {
             _logger = logger;
-        }
-
-        public class returnMessage
-        {
-            public string errorCode { get; set; }
-            public string errorMessage { get; set; }
-            public returnMessage(string errorCode, string errorMessage)
-            {
-                this.errorCode = errorCode;
-                this.errorMessage = errorMessage;
-            }
-            public returnMessage()
-            {
-
-            }
         }
 
         /// <summary>
@@ -81,35 +66,36 @@ namespace PowerEntity.Controllers
 
         {
 
-            string xmlReturn;
-
-            using (OracleConnection objConn = new OracleConnection("Data Source=(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521)))(CONNECT_DATA = (SID = xe))); User ID=EDM; Password=edm01"))
+            using (OracleConnection objConn = new OracleConnection())
             {
+
+                objConn.ConnectionString = Startup.ConnectionString;
+
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
                 objCmd.CommandText = "PKG_EDM_API.pro_get_risk_profile";
                 objCmd.CommandType = CommandType.StoredProcedure;
-                objCmd.Parameters.Add("p_entity_id", OracleType.VarChar, 32000).Value = IdEntity;
-                objCmd.Parameters.Add("p_out_risk_profile_xml", OracleType.VarChar, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleType.Number).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_dserror", OracleType.VarChar, 4000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
+                objCmd.Parameters.Add("p_out_risk_profile_xml", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
                 {
                     objConn.Open();
                     objCmd.ExecuteNonQuery();
 
-                    xmlReturn = objCmd.Parameters["p_out_risk_profile_xml"].Value.ToString();
-                    var _cderror = objCmd.Parameters["p_cderror"].Value.ToString();
+                    var _xmlReturn = objCmd.Parameters["p_out_risk_profile_xml"].Value.ToString();
+                    var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
                     objConn.Close();
 
-                    if (_cderror != "0")
+                    if (_cderror != 0)
                     {
                         var _errorResponse = new ErrorResponse(_cderror, _dserror);
 
-                        if (_cderror == "10001")
+                        if (_cderror == 10001)
                         {
                             return NotFound(_errorResponse);
                         }
@@ -123,7 +109,7 @@ namespace PowerEntity.Controllers
 
                     Serializer ser = new Serializer();
 
-                    var upperRiskProfile = ser.Deserialize<TYP_PES_OBJ_RISK_PROFILE>(xmlReturn);
+                    var upperRiskProfile = ser.Deserialize<TYP_PES_OBJ_RISK_PROFILE>(_xmlReturn);
 
                     var lowerRiskProfile = Converter.RiskProfileUpperToLower(upperRiskProfile);
 
@@ -133,9 +119,7 @@ namespace PowerEntity.Controllers
                 catch (Exception ex)
                 {
 
-                    xmlReturn = ex.ToString();
-
-                    return BadRequest(xmlReturn);
+                    return BadRequest(ex.ToString());
                 }
 
             }
@@ -178,32 +162,35 @@ namespace PowerEntity.Controllers
 
             string xmlReturn;
 
-            using (OracleConnection objConn = new OracleConnection("Data Source=(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521)))(CONNECT_DATA = (SID = xe))); User ID=EDM; Password=edm01"))
+            using (OracleConnection objConn = new OracleConnection())
             {
+
+                objConn.ConnectionString = Startup.ConnectionString;
+
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
                 objCmd.CommandText = "PKG_EDM_API.pro_set_risk_profile";
                 objCmd.CommandType = CommandType.StoredProcedure;
-                objCmd.Parameters.Add("p_entity_id", OracleType.VarChar, 32000).Value = IdEntity;
-                objCmd.Parameters.Add("p_in_risk_profile_xml", OracleType.VarChar, 32000).Value = xmlRiskProfile;
-                objCmd.Parameters.Add("p_cderror", OracleType.Number).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_dserror", OracleType.VarChar, 4000).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
+                objCmd.Parameters.Add("p_in_risk_profile_xml", OracleDbType.Varchar2, 32000).Value = xmlRiskProfile;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
                 {
                     objConn.Open();
                     objCmd.ExecuteNonQuery();
 
-                    var _cderror = objCmd.Parameters["p_cderror"].Value.ToString();
+                    var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
                     objConn.Close();
 
-                    if (_cderror != "0")
+                    if (_cderror != 0)
                     {
                         var _errorResponse = new ErrorResponse(_cderror, _dserror);
 
-                        if (_cderror == "10001")
+                        if (_cderror == 10001)
                         {
                             return NotFound(_errorResponse);
                         }
@@ -213,9 +200,7 @@ namespace PowerEntity.Controllers
                         }
                     }
 
-                    var _returnMessage = new returnMessage(_cderror, _dserror);
-                   
-                    return Ok(_returnMessage);
+                    return Ok(new ErrorResponse(_cderror, _dserror));
 
                 }
                 catch (Exception ex)
