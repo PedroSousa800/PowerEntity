@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using PowerEntity.Tools;
 using PowerEntity.Tools.UpperTypes;
 using Tools;
@@ -59,7 +56,7 @@ namespace PowerEntity.Controllers
 
         {
 
-            string xmlReturn;
+            string _xmlReturn;
 
             using (OracleConnection objConn = new OracleConnection())
             {
@@ -72,7 +69,7 @@ namespace PowerEntity.Controllers
                 objCmd.CommandType = CommandType.StoredProcedure;
                 objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
                 objCmd.Parameters.Add("p_out_entity_type", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int32).Direction = ParameterDirection.Output;
                 objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
@@ -80,7 +77,7 @@ namespace PowerEntity.Controllers
                     objConn.Open();
                     objCmd.ExecuteNonQuery();
 
-                    xmlReturn = objCmd.Parameters["p_out_entity_type"].Value.ToString();
+                    _xmlReturn = objCmd.Parameters["p_out_entity_type"].Value.ToString();
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
@@ -102,9 +99,9 @@ namespace PowerEntity.Controllers
 
                     Serializer ser = new Serializer();
 
-                    //return Ok(xmlReturn);
+                    //return Ok(_xmlReturn);
 
-                    var entityUpper = ser.Deserialize<TYP_PES_ENTITY>(xmlReturn);
+                    var entityUpper = ser.Deserialize<TYP_PES_ENTITY>(_xmlReturn);
 
                     var entityLower = Converter.EntityUpperToLower(entityUpper);
 
@@ -114,9 +111,9 @@ namespace PowerEntity.Controllers
                 catch (Exception ex)
                 {
 
-                    xmlReturn = ex.ToString();
+                    _xmlReturn = ex.ToString();
 
-                    return BadRequest(xmlReturn);
+                    return BadRequest(_xmlReturn);
                 }
 
             }
@@ -147,7 +144,7 @@ namespace PowerEntity.Controllers
 
             var xmlEntity = ConvertObjectToXML.SerializeEntityToXML(entity);
 
-            string xmlReturn;
+            string _xmlReturn;
 
             using (OracleConnection objConn = new OracleConnection())
             {
@@ -160,7 +157,7 @@ namespace PowerEntity.Controllers
                 objCmd.CommandType = CommandType.StoredProcedure;
                 objCmd.Parameters.Add("p_in_entity_type", OracleDbType.Varchar2, 32000).Value = xmlEntity;
                 objCmd.Parameters.Add("p_out_entity_type", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int32).Direction = ParameterDirection.Output;
                 objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
@@ -181,13 +178,13 @@ namespace PowerEntity.Controllers
                         return BadRequest(_errorResponse);
                     }
 
-                    xmlReturn = objCmd.Parameters["p_out_entity_type"].Value.ToString();
+                    _xmlReturn = objCmd.Parameters["p_out_entity_type"].Value.ToString();
 
                     objConn.Close();
 
                     Serializer ser = new Serializer();
 
-                    var entityUpper = ser.Deserialize<TYP_PES_ENTITY>(xmlReturn);
+                    var entityUpper = ser.Deserialize<TYP_PES_ENTITY>(_xmlReturn);
 
                     var entityLower = Converter.EntityUpperToLower(entityUpper);
 
@@ -197,9 +194,9 @@ namespace PowerEntity.Controllers
                 catch (Exception ex)
                 {
 
-                    xmlReturn = ex.ToString();
+                    _xmlReturn = ex.ToString();
 
-                    return BadRequest(xmlReturn);
+                    return BadRequest(_xmlReturn);
                 }
 
             }
@@ -231,7 +228,7 @@ namespace PowerEntity.Controllers
 
             var xmlEntity = ConvertObjectToXML.SerializeEntityToXML(entity);
 
-            string xmlReturn;
+            string _xmlReturn;
 
             using (OracleConnection objConn = new OracleConnection())
             {
@@ -244,7 +241,7 @@ namespace PowerEntity.Controllers
                 objCmd.CommandType = CommandType.StoredProcedure;
                 objCmd.Parameters.Add("p_in_entity_type", OracleDbType.Varchar2, 32000).Value = xmlEntity;
                 objCmd.Parameters.Add("p_out_entity_type", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int32).Direction = ParameterDirection.Output;
                 objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
@@ -265,13 +262,13 @@ namespace PowerEntity.Controllers
                         return BadRequest(_errorResponse);
                     }
 
-                    xmlReturn = objCmd.Parameters["p_out_entity_type"].Value.ToString();
+                    _xmlReturn = objCmd.Parameters["p_out_entity_type"].Value.ToString();
 
                     objConn.Close();
 
                     Serializer ser = new Serializer();
 
-                    var entityUpper = ser.Deserialize<TYP_PES_ENTITY>(xmlReturn);
+                    var entityUpper = ser.Deserialize<TYP_PES_ENTITY>(_xmlReturn);
 
                     var entityLower = Converter.EntityUpperToLower(entityUpper);
 
@@ -281,9 +278,9 @@ namespace PowerEntity.Controllers
                 catch (Exception ex)
                 {
 
-                    xmlReturn = ex.ToString();
+                    _xmlReturn = ex.ToString();
 
-                    return BadRequest(xmlReturn);
+                    return BadRequest(_xmlReturn);
                 }
 
             }
@@ -320,7 +317,7 @@ namespace PowerEntity.Controllers
                                                         [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser)
         {
 
-            string xmlReturn;
+            string _xmlReturn;
 
             using (OracleConnection objConn = new OracleConnection())
             {
@@ -333,7 +330,7 @@ namespace PowerEntity.Controllers
                 objCmd.CommandType = CommandType.StoredProcedure;
                 objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
                 objCmd.Parameters.Add("p_out_addresses_xml", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int32).Direction = ParameterDirection.Output;
                 objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
@@ -341,7 +338,7 @@ namespace PowerEntity.Controllers
                     objConn.Open();
                     objCmd.ExecuteNonQuery();
 
-                    xmlReturn = objCmd.Parameters["p_out_addresses_xml"].Value.ToString();
+                    _xmlReturn = objCmd.Parameters["p_out_addresses_xml"].Value.ToString();
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
@@ -363,7 +360,7 @@ namespace PowerEntity.Controllers
 
                     Serializer ser = new Serializer();
 
-                    var upperAddresses = ser.Deserialize<TYP_PES_OBJ_ADDRESSES>(xmlReturn);
+                    var upperAddresses = ser.Deserialize<TYP_PES_OBJ_ADDRESSES>(_xmlReturn);
 
                     var lowerAddresses = Converter.AddressesUpperToLower(upperAddresses);
 
@@ -373,9 +370,9 @@ namespace PowerEntity.Controllers
                 catch (Exception ex)
                 {
 
-                    xmlReturn = ex.ToString();
+                    _xmlReturn = ex.ToString();
 
-                    return BadRequest(xmlReturn);
+                    return BadRequest(_xmlReturn);
                 }
 
             }
@@ -411,7 +408,7 @@ namespace PowerEntity.Controllers
 
             var xmlAddresses = ConvertObjectToXML.SerializeAddressesToXML(addresses);
 
-            string xmlReturn;
+            string _xmlReturn;
 
             using (OracleConnection objConn = new OracleConnection())
             {
@@ -425,7 +422,7 @@ namespace PowerEntity.Controllers
                 objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
                 objCmd.Parameters.Add("p_in_addresses_xml", OracleDbType.Varchar2, 32000).Value = xmlAddresses;
                 objCmd.Parameters.Add("p_out_addresses_xml", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int32).Direction = ParameterDirection.Output;
                 objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
@@ -433,7 +430,7 @@ namespace PowerEntity.Controllers
                     objConn.Open();
                     objCmd.ExecuteNonQuery();
 
-                    xmlReturn = objCmd.Parameters["p_out_addresses_xml"].Value.ToString();
+                    _xmlReturn = objCmd.Parameters["p_out_addresses_xml"].Value.ToString();
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
@@ -455,7 +452,7 @@ namespace PowerEntity.Controllers
 
                     Serializer ser = new Serializer();
 
-                    var upperAddresses = ser.Deserialize<TYP_PES_OBJ_ADDRESSES>(xmlReturn);
+                    var upperAddresses = ser.Deserialize<TYP_PES_OBJ_ADDRESSES>(_xmlReturn);
 
                     var lowerAddresses = Converter.AddressesUpperToLower(upperAddresses);
 
@@ -465,9 +462,9 @@ namespace PowerEntity.Controllers
                 catch (Exception ex)
                 {
 
-                    xmlReturn = ex.ToString();
+                    _xmlReturn = ex.ToString();
 
-                    return BadRequest(xmlReturn);
+                    return BadRequest(_xmlReturn);
                 }
 
             }
@@ -505,7 +502,7 @@ namespace PowerEntity.Controllers
 
         {
 
-            string xmlReturn;
+            string _xmlReturn;
 
             using (OracleConnection objConn = new OracleConnection())
             {
@@ -518,7 +515,7 @@ namespace PowerEntity.Controllers
                 objCmd.CommandType = CommandType.StoredProcedure;
                 objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
                 objCmd.Parameters.Add("p_out_bank_account_xml", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int32).Direction = ParameterDirection.Output;
                 objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
@@ -526,7 +523,7 @@ namespace PowerEntity.Controllers
                     objConn.Open();
                     objCmd.ExecuteNonQuery();
 
-                    xmlReturn = objCmd.Parameters["p_out_bank_account_xml"].Value.ToString();
+                    _xmlReturn = objCmd.Parameters["p_out_bank_account_xml"].Value.ToString();
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
@@ -548,7 +545,7 @@ namespace PowerEntity.Controllers
 
                     Serializer ser = new Serializer();
 
-                    var upperBankAccounts = ser.Deserialize<TYP_PES_OBJ_BANK_ACCOUNTS>(xmlReturn);
+                    var upperBankAccounts = ser.Deserialize<TYP_PES_OBJ_BANK_ACCOUNTS>(_xmlReturn);
 
                     var lowerBankAccounts = Converter.BankAccountsUpperToLower(upperBankAccounts);
 
@@ -558,9 +555,9 @@ namespace PowerEntity.Controllers
                 catch (Exception ex)
                 {
 
-                    xmlReturn = ex.ToString();
+                    _xmlReturn = ex.ToString();
 
-                    return BadRequest(xmlReturn);
+                    return BadRequest(_xmlReturn);
                 }
 
             }
@@ -594,7 +591,7 @@ namespace PowerEntity.Controllers
 
             var xmlBankAccounts = ConvertObjectToXML.SerializeBankAccountsToXML(bankAccounts);
 
-            string xmlReturn;
+            string _xmlReturn;
 
             using (OracleConnection objConn = new OracleConnection())
             {
@@ -608,7 +605,7 @@ namespace PowerEntity.Controllers
                 objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
                 objCmd.Parameters.Add("p_in_bank_account_xml", OracleDbType.Varchar2, 32000).Value = xmlBankAccounts;
                 objCmd.Parameters.Add("p_out_bank_account_xml", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int32).Direction = ParameterDirection.Output;
                 objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
@@ -616,7 +613,7 @@ namespace PowerEntity.Controllers
                     objConn.Open();
                     objCmd.ExecuteNonQuery();
 
-                    xmlReturn = objCmd.Parameters["p_out_bank_account_xml"].Value.ToString();
+                    _xmlReturn = objCmd.Parameters["p_out_bank_account_xml"].Value.ToString();
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
@@ -640,7 +637,7 @@ namespace PowerEntity.Controllers
 
                     Serializer ser = new Serializer();
 
-                    var upperBankAccounts = ser.Deserialize<TYP_PES_OBJ_BANK_ACCOUNTS>(xmlReturn);
+                    var upperBankAccounts = ser.Deserialize<TYP_PES_OBJ_BANK_ACCOUNTS>(_xmlReturn);
 
                     var lowerBankAccounts = Converter.BankAccountsUpperToLower(upperBankAccounts);
 
@@ -650,9 +647,9 @@ namespace PowerEntity.Controllers
                 catch (Exception ex)
                 {
 
-                    xmlReturn = ex.ToString();
+                    _xmlReturn = ex.ToString();
 
-                    return BadRequest(xmlReturn);
+                    return BadRequest(_xmlReturn);
                 }
 
             }
@@ -690,7 +687,7 @@ namespace PowerEntity.Controllers
 
         {
 
-            string xmlReturn;
+            string _xmlReturn;
 
             using (OracleConnection objConn = new OracleConnection())
             {
@@ -703,7 +700,7 @@ namespace PowerEntity.Controllers
                 objCmd.CommandType = CommandType.StoredProcedure;
                 objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
                 objCmd.Parameters.Add("p_out_documents_xml", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int32).Direction = ParameterDirection.Output;
                 objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
@@ -711,7 +708,7 @@ namespace PowerEntity.Controllers
                     objConn.Open();
                     objCmd.ExecuteNonQuery();
 
-                    xmlReturn = objCmd.Parameters["p_out_documents_xml"].Value.ToString();
+                    _xmlReturn = objCmd.Parameters["p_out_documents_xml"].Value.ToString();
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
@@ -733,7 +730,7 @@ namespace PowerEntity.Controllers
 
                     Serializer ser = new Serializer();
 
-                    var upperDocuments = ser.Deserialize<TYP_PES_OBJ_DOCUMENTS>(xmlReturn);
+                    var upperDocuments = ser.Deserialize<TYP_PES_OBJ_DOCUMENTS>(_xmlReturn);
 
                     var lowerDocuments = Converter.DocumentsUpperToLower(upperDocuments);
 
@@ -743,9 +740,9 @@ namespace PowerEntity.Controllers
                 catch (Exception ex)
                 {
 
-                    xmlReturn = ex.ToString();
+                    _xmlReturn = ex.ToString();
 
-                    return BadRequest(xmlReturn);
+                    return BadRequest(_xmlReturn);
                 }
 
             }
@@ -781,7 +778,7 @@ namespace PowerEntity.Controllers
 
             var xmlDocuments = ConvertObjectToXML.SerializeDocumentsToXML(documents);
 
-            string xmlReturn;
+            string _xmlReturn;
 
             using (OracleConnection objConn = new OracleConnection())
             {
@@ -795,7 +792,7 @@ namespace PowerEntity.Controllers
                 objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
                 objCmd.Parameters.Add("p_in_documents_xml", OracleDbType.Varchar2, 32000).Value = xmlDocuments;
                 objCmd.Parameters.Add("p_out_documents_xml", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int32).Direction = ParameterDirection.Output;
                 objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
@@ -804,7 +801,7 @@ namespace PowerEntity.Controllers
                     objCmd.ExecuteNonQuery();
 
 
-                    xmlReturn = objCmd.Parameters["p_out_documents_xml"].Value.ToString();
+                    _xmlReturn = objCmd.Parameters["p_out_documents_xml"].Value.ToString();
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
@@ -826,7 +823,7 @@ namespace PowerEntity.Controllers
 
                     Serializer ser = new Serializer();
 
-                    var upperDocuments = ser.Deserialize<TYP_PES_OBJ_DOCUMENTS>(xmlReturn);
+                    var upperDocuments = ser.Deserialize<TYP_PES_OBJ_DOCUMENTS>(_xmlReturn);
 
                     var lowerDocuments = Converter.DocumentsUpperToLower(upperDocuments);
 
@@ -836,9 +833,9 @@ namespace PowerEntity.Controllers
                 catch (Exception ex)
                 {
 
-                    xmlReturn = ex.ToString();
+                    _xmlReturn = ex.ToString();
 
-                    return BadRequest(xmlReturn);
+                    return BadRequest(_xmlReturn);
                 }
 
             }
@@ -846,51 +843,51 @@ namespace PowerEntity.Controllers
         }
 
 
-        /// <param name="IdEntity" defaultValue="80">Entity id</param>
-        [HttpGet]
-        [Route("/v1/[controller]/{IdEntity}/Teste")]
-        [ProducesResponseType(typeof(List<Document>), 201)]
-        [ProducesResponseType(typeof(ErrorResponse400), 400)]
-        [ProducesResponseType(typeof(ErrorResponse404), 404)]
-        public ActionResult<List<Document>> GetTeste([Required] string IdEntity,
-                                                     [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
-                                                     [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
-                                                     [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
-                                                     [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser)
+        
+        //[HttpGet]
+        //[Route("/v1/[controller]/{IdEntity}/Teste")]
+        //[ProducesResponseType(typeof(List<Document>), 201)]
+        //[ProducesResponseType(typeof(ErrorResponse400), 400)]
+        //[ProducesResponseType(typeof(ErrorResponse404), 404)]
+        //public ActionResult<List<Document>> GetTeste([Required] string IdEntity,
+        //                                             [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
+        //                                             [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
+        //                                             [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
+        //                                             [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser)
 
 
-        {
-            var entity = new Entity();
-            entity.idEntity = "70";
-            entity.vatNumber = "265078431";
-            entity.isForeignVat = false;
-            entity.countryCode = "PRT";
+        //{
+        //    var entity = new Entity();
+        //    entity.idEntity = "70";
+        //    entity.vatNumber = "265078431";
+        //    entity.isForeignVat = false;
+        //    entity.countryCode = "PRT";
 
-            var _nationalities = new List<Nationality>();
-            _nationalities.Add(new Nationality("PRT", null, "S"));
+        //    var _nationalities = new List<Nationality>();
+        //    _nationalities.Add(new Nationality("PRT", null, "S"));
 
-            //entity.type = new IndividualOrganization();
+        //    //entity.type = new IndividualOrganization();
 
-            var _individual = new Individual("Ana Leitão",
-                                                    DateTime.ParseExact("1952-06-06", "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                                                    "M", null,
-                                                    "S", null,
-                                                    "N", null,
-                                                    "N", "Portugal",
-                                                    _nationalities);
+        //    var _individual = new Individual("Ana Leitão",
+        //                                            DateTime.ParseExact("1952-06-06", "yyyy-MM-dd", CultureInfo.InvariantCulture),
+        //                                            "M", null,
+        //                                            "S", null,
+        //                                            "N", null,
+        //                                            "N", "Portugal",
+        //                                            _nationalities);
 
-            entity.type.individual = new Individual("Ana Leitão",
-                                                    DateTime.ParseExact("1952-06-06", "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                                                    "M", null,
-                                                    "S", null,
-                                                    "N", null,
-                                                    "N", "Portugal",
-                                                    _nationalities);
+        //    entity.type.individual = new Individual("Ana Leitão",
+        //                                            DateTime.ParseExact("1952-06-06", "yyyy-MM-dd", CultureInfo.InvariantCulture),
+        //                                            "M", null,
+        //                                            "S", null,
+        //                                            "N", null,
+        //                                            "N", "Portugal",
+        //                                            _nationalities);
 
-            entity.type.individual = _individual;
-            entity.riskProfile = new RiskProfile("2", "Perfil conservador", "2021-11-14", null, "2547889", "1", "Portal de Agentes");
+        //    entity.type.individual = _individual;
+        //    entity.riskProfile = new RiskProfile("2", "Perfil conservador", "2021-11-14", null, "2547889", "1", "Portal de Agentes");
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
     }
 }

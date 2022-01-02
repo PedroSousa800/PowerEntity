@@ -77,7 +77,7 @@ namespace PowerEntity.Controllers
                 objCmd.CommandType = CommandType.StoredProcedure;
                 objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
                 objCmd.Parameters.Add("p_out_risk_profile_xml", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
-                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int32).Direction = ParameterDirection.Output;
                 objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
@@ -160,7 +160,7 @@ namespace PowerEntity.Controllers
             
             var xmlRiskProfile = ConvertObjectToXML.SerializeRiskProfileToXML(riskProfile);
 
-            string xmlReturn;
+            string _xmlReturn;
 
             using (OracleConnection objConn = new OracleConnection())
             {
@@ -173,7 +173,7 @@ namespace PowerEntity.Controllers
                 objCmd.CommandType = CommandType.StoredProcedure;
                 objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
                 objCmd.Parameters.Add("p_in_risk_profile_xml", OracleDbType.Varchar2, 32000).Value = xmlRiskProfile;
-                objCmd.Parameters.Add("p_cderror", OracleDbType.Int16).Direction = ParameterDirection.Output;
+                objCmd.Parameters.Add("p_cderror", OracleDbType.Int32).Direction = ParameterDirection.Output;
                 objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 try
@@ -206,9 +206,9 @@ namespace PowerEntity.Controllers
                 catch (Exception ex)
                 {
 
-                    xmlReturn = ex.ToString();
+                    _xmlReturn = ex.ToString();
 
-                    return BadRequest(xmlReturn);
+                    return BadRequest(_xmlReturn);
                 }
 
             }

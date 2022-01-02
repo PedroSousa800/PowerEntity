@@ -12,17 +12,17 @@ namespace PowerEntity.SwaggerExamples.Requests
     {
         public RiskProfile GetExamples()
         {
-            var riskProfile = new RiskProfile();
+            var _riskProfile = new RiskProfile();
 
-            riskProfile.code = "1";
-            riskProfile.description = "Perfil muito conservador";
-            riskProfile.startDate = DateTime.ParseExact("2013-11-14", "yyyy-MM-dd", CultureInfo.InvariantCulture); 
-            riskProfile.endDate = DateTime.ParseExact("2021-10-03", "yyyy-MM-dd", CultureInfo.InvariantCulture); 
-            riskProfile.proposal = "666544";
-            riskProfile.systemCode = "1";
-            riskProfile.systemDescription = "Portal de Agentes";
+            _riskProfile.code = "1";
+            _riskProfile.description = "Perfil muito conservador";
+            _riskProfile.startDate = DateTime.ParseExact("2013-11-14", "yyyy-MM-dd", CultureInfo.InvariantCulture); 
+            _riskProfile.endDate = DateTime.ParseExact("2021-10-03", "yyyy-MM-dd", CultureInfo.InvariantCulture); 
+            _riskProfile.proposal = "666544";
+            _riskProfile.systemCode = "1";
+            _riskProfile.systemDescription = "Portal de Agentes";
 
-            return riskProfile;
+            return _riskProfile;
         }
     }
 }

@@ -11,12 +11,12 @@ namespace PowerEntity.SwaggerExamples.Requests
     {
         public List<Document> GetExamples()
         {
-            var documents = new List<Document>();
+            var _documents = new List<Document>();
 
-            documents.Add(new Document("C", "Cédula Pessoal / Boletim de Nascimento", "778899"));
-            documents.Add(new Document("U", "Cartão Cidadão", "4420005"));
+            _documents.Add(new Document("C", "Cédula Pessoal / Boletim de Nascimento", "778899"));
+            _documents.Add(new Document("U", "Cartão Cidadão", "4420005"));
 
-            return documents;
+            return _documents;
         }
     }
 }

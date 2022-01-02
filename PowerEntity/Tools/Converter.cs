@@ -13,22 +13,22 @@ namespace PowerEntity.Tools
 
         public static Entity EntityUpperToLower(TYP_PES_ENTITY entityUpper)
         {
-            var entity = new Entity();
+            var _entity = new Entity();
 
-            entity.idEntity = entityUpper.DNI;
-            entity.countryCode = entityUpper.NATIONALITY_CODE;
-            entity.countryDescription = entityUpper.NATIONALITY_DESCRIPTION;
-            entity.vatNumber = entityUpper.VAT_NUMBER;
+            _entity.idEntity = entityUpper.DNI;
+            _entity.countryCode = entityUpper.NATIONALITY_CODE;
+            _entity.countryDescription = entityUpper.NATIONALITY_DESCRIPTION;
+            _entity.vatNumber = entityUpper.VAT_NUMBER;
             if (entityUpper.IS_FOREIGN_VAT == "S")
             {
-                entity.isForeignVat = true;
+                _entity.isForeignVat = true;
             }
             else
             {
-                entity.isForeignVat = false;
+                _entity.isForeignVat = false;
             }
 
-            entity.type = new IndividualOrganization();
+            _entity.type = new IndividualOrganization();
 
 
 
@@ -57,7 +57,7 @@ namespace PowerEntity.Tools
             }
 
 
-            entity.type.individual = new Individual(entityUpper.PERSON.NAME, _birthDate, entityUpper.PERSON.GENDER, entityUpper.PERSON.GENDER_DESCRIPTION,
+            _entity.type.individual = new Individual(entityUpper.PERSON.NAME, _birthDate, entityUpper.PERSON.GENDER, entityUpper.PERSON.GENDER_DESCRIPTION,
                                                     entityUpper.PERSON.MARITAL_STATUS, entityUpper.PERSON.MARITAL_STATUS_DESCRIPTION,
                                                     entityUpper.PERSON.IS_DECEASED, _deceseadDate,
                                                     entityUpper.PERSON.IS_SELF_EMPLOYEE, entityUpper.PERSON.PLACE_OF_BIRTH,
@@ -94,7 +94,7 @@ namespace PowerEntity.Tools
                 _equitCapital = int.Parse(entityUpper.ORGANIZATION.EQUITY_CAPITAL);
             }
 
-            entity.type.company = new Company(entityUpper.ORGANIZATION.COMPANY_NAME, entityUpper.ORGANIZATION.FOUNDING_DATE,
+            _entity.type.company = new Company(entityUpper.ORGANIZATION.COMPANY_NAME, entityUpper.ORGANIZATION.FOUNDING_DATE,
                                               _totalEmployees, _grossAnnualRevennue,
                                               _wagesAmount, _equitCapital,
                                               entityUpper.ORGANIZATION.ORGANIZATION_TYPE_CODE, entityUpper.ORGANIZATION.ORGANIZATION_TYPE_DESCRIPTION,
@@ -103,78 +103,78 @@ namespace PowerEntity.Tools
 
             foreach (var address in entityUpper.ADDRESSES)
             {
-                entity.addresses.Add(new Address(address.SEQUENCE, address.ADDRESS_TYPE_CODE, address.ADDRESS_TYPE_DESCRIPTION, address.FULL_ADDRESS));
+                _entity.addresses.Add(new Address(address.SEQUENCE, address.ADDRESS_TYPE_CODE, address.ADDRESS_TYPE_DESCRIPTION, address.FULL_ADDRESS));
             }
 
             foreach (var bankAccount in entityUpper.BANK_ACCOUNTS)
             {
 
-                entity.bankAccounts.Add(new BankAccount(bankAccount.ORDER_NUMBER, bankAccount.BANK_NUMBER, bankAccount.IBAN_CODE, bankAccount.START_DATE, bankAccount.END_DATE));
+                _entity.bankAccounts.Add(new BankAccount(bankAccount.ORDER_NUMBER, bankAccount.BANK_NUMBER, bankAccount.IBAN_CODE, bankAccount.START_DATE, bankAccount.END_DATE));
             }
 
             foreach (var document in entityUpper.DOCUMENTS)
             {
-                entity.documents.Add(new Document(document.DOCUMENT_TYPE_CODE, document.DOCUMENT_TYPE_DESCRIPTION, document.DOCUMENT_NUMBER));
+                _entity.documents.Add(new Document(document.DOCUMENT_TYPE_CODE, document.DOCUMENT_TYPE_DESCRIPTION, document.DOCUMENT_NUMBER));
             }
 
-            entity.riskProfile = new RiskProfile(entityUpper.RISK_PROFILE.COD_RISK_PROFILE, entityUpper.RISK_PROFILE.RISK_PROFILE_DESCRIPTION,
+            _entity.riskProfile = new RiskProfile(entityUpper.RISK_PROFILE.COD_RISK_PROFILE, entityUpper.RISK_PROFILE.RISK_PROFILE_DESCRIPTION,
                                                  entityUpper.RISK_PROFILE.START_DATE, entityUpper.RISK_PROFILE.END_DATE, entityUpper.RISK_PROFILE.NM_PROPOSAL,
                                                  entityUpper.RISK_PROFILE.ID_SYSTEM, entityUpper.RISK_PROFILE.SYSTEM_DESCRIPTION);
 
-            return entity;
+            return _entity;
 
         }
         public static List<Address> AddressesUpperToLower(TYP_PES_OBJ_ADDRESSES addressesUpper)
         {
-            var addresses = new List<Address>();
+            var _addresses = new List<Address>();
 
 
             foreach (var address in addressesUpper.ADDRESSES)
             {
 
-                addresses.Add(new Address(address.SEQUENCE, address.ADDRESS_TYPE_CODE, address.ADDRESS_TYPE_DESCRIPTION, address.FULL_ADDRESS));
+                _addresses.Add(new Address(address.SEQUENCE, address.ADDRESS_TYPE_CODE, address.ADDRESS_TYPE_DESCRIPTION, address.FULL_ADDRESS));
             }
 
-            return addresses;
+            return _addresses;
 
         }
         public static List<BankAccount> BankAccountsUpperToLower(TYP_PES_OBJ_BANK_ACCOUNTS bankAccountsUpper)
         {
-            var bankAccounts = new List<BankAccount>();
+            var _bankAccounts = new List<BankAccount>();
 
 
             foreach (var bankAccount in bankAccountsUpper.BANK_ACCOUNTS)
             {
 
-                bankAccounts.Add(new BankAccount(bankAccount.ORDER_NUMBER, bankAccount.BANK_NUMBER, bankAccount.IBAN_CODE, bankAccount.START_DATE, bankAccount.END_DATE));
+                _bankAccounts.Add(new BankAccount(bankAccount.ORDER_NUMBER, bankAccount.BANK_NUMBER, bankAccount.IBAN_CODE, bankAccount.START_DATE, bankAccount.END_DATE));
             }
 
-            return bankAccounts;
+            return _bankAccounts;
 
         }
 
         public static List<Document> DocumentsUpperToLower(TYP_PES_OBJ_DOCUMENTS documentsUpper)
         {
-            var documents = new List<Document>();
+            var _documents = new List<Document>();
 
 
             foreach (var document in documentsUpper.DOCUMENTS)
             {
-                documents.Add(new Document(document.DOCUMENT_TYPE_CODE, document.DOCUMENT_TYPE_DESCRIPTION, document.DOCUMENT_NUMBER));
+                _documents.Add(new Document(document.DOCUMENT_TYPE_CODE, document.DOCUMENT_TYPE_DESCRIPTION, document.DOCUMENT_NUMBER));
             }
 
-            return documents;
+            return _documents;
 
         }
 
 
         public static RiskProfile RiskProfileUpperToLower(TYP_PES_OBJ_RISK_PROFILE riskProfileUpper)
         {
-            var riskProfile = new RiskProfile(riskProfileUpper.RISK_PROFILE.COD_RISK_PROFILE, riskProfileUpper.RISK_PROFILE.RISK_PROFILE_DESCRIPTION,
+            var _riskProfile = new RiskProfile(riskProfileUpper.RISK_PROFILE.COD_RISK_PROFILE, riskProfileUpper.RISK_PROFILE.RISK_PROFILE_DESCRIPTION,
                                               riskProfileUpper.RISK_PROFILE.START_DATE, riskProfileUpper.RISK_PROFILE.END_DATE, riskProfileUpper.RISK_PROFILE.NM_PROPOSAL,
                                               riskProfileUpper.RISK_PROFILE.ID_SYSTEM, riskProfileUpper.RISK_PROFILE.SYSTEM_DESCRIPTION);
 
-            return riskProfile;
+            return _riskProfile;
 
         }
 

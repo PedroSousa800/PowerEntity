@@ -11,7 +11,7 @@ namespace Swagger.Demo.SwaggerExamples.Responses
     {
         public ErrorResponse400 GetExamples()
         {
-            return new ErrorResponse400 { errorCode = "10002", errorMessage = "Código do país inválido." };
+            return new ErrorResponse400 { ErrorCode = "10002", ErrorMessage = "Código do país inválido." };
         }
     }
 }

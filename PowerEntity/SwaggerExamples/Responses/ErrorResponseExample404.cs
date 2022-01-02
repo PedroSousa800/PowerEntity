@@ -11,7 +11,7 @@ namespace Swagger.Demo.SwaggerExamples.Responses
     {
         public ErrorResponse404 GetExamples()
         {
-            return new ErrorResponse404 { errorCode = "10001", errorMessage = "IdEntity inválido." };
+            return new ErrorResponse404 { ErrorCode = "10001", ErrorMessage = "IdEntity inválido." };
         }
     }
 }

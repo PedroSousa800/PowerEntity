@@ -17,26 +17,26 @@ namespace PowerEntity.Tools
         }
         public static string SerializeEntityToXML(Entity entity)
         {
-            var typ_pes_entity = new TYP_PES_ENTITY();
+            var _typ_pes_entity = new TYP_PES_ENTITY();
 
-            typ_pes_entity.DNI = entity.idEntity;
+            _typ_pes_entity.DNI = entity.idEntity;
 
-            typ_pes_entity.NATIONALITY_CODE = entity.countryCode;
-            typ_pes_entity.NATIONALITY_DESCRIPTION = null;
+            _typ_pes_entity.NATIONALITY_CODE = entity.countryCode;
+            _typ_pes_entity.NATIONALITY_DESCRIPTION = null;
 
-            typ_pes_entity.VAT_NUMBER = entity.vatNumber;
+            _typ_pes_entity.VAT_NUMBER = entity.vatNumber;
             if (entity.isForeignVat)
             {
-                typ_pes_entity.IS_FOREIGN_VAT = "S";
+                _typ_pes_entity.IS_FOREIGN_VAT = "S";
             }
             else
             {
-                typ_pes_entity.IS_FOREIGN_VAT = "N";
+                _typ_pes_entity.IS_FOREIGN_VAT = "N";
             }
 
             if (entity.type.individual != null)
             {
-                typ_pes_entity.PERSON = new TYP_PES_PERSON(entity.type.individual.name, entity.type.individual.birthdate,
+                _typ_pes_entity.PERSON = new TYP_PES_PERSON(entity.type.individual.name, entity.type.individual.birthdate,
                                                            entity.type.individual.gender, entity.type.individual.genderDescription,
                                                            entity.type.individual.maritalStatus, entity.type.individual.maritalStatusDescription,
                                                            entity.type.individual.isDeceased, entity.type.individual.deceasedDate,
@@ -45,7 +45,7 @@ namespace PowerEntity.Tools
 
             if (entity.type.company != null)
             {
-                typ_pes_entity.ORGANIZATION = new TYP_PES_ORGANIZATION(entity.type.company.companyName, entity.type.company.totalEmployes.ToString(),
+                _typ_pes_entity.ORGANIZATION = new TYP_PES_ORGANIZATION(entity.type.company.companyName, entity.type.company.totalEmployes.ToString(),
                                                                        entity.type.company.wagesAmount.ToString(), entity.type.company.grossAnnualRevenue.ToString(),
                                                                        entity.type.company.entityCapital.ToString(), entity.type.company.foundingDate,
                                                                        entity.type.company.companyTypeCode, entity.type.company.companyTypeCodeDescription,
@@ -53,35 +53,35 @@ namespace PowerEntity.Tools
                                                                        entity.type.company.publicEntity, entity.type.company.isONG);
                 foreach (var nationality in entity.type.individual.nationalities)
                 {
-                    typ_pes_entity.PERSON.NATIONALITIES.Add(new TYP_PES_NATIONALITY(nationality.nationalityCode, null, nationality.isPrincipal));
+                    _typ_pes_entity.PERSON.NATIONALITIES.Add(new TYP_PES_NATIONALITY(nationality.nationalityCode, null, nationality.isPrincipal));
                 }
 
             }
 
             foreach (var address in entity.addresses)
             {
-                typ_pes_entity.ADDRESSES.Add(new TYP_PES_ADDRESS(address.sequence, address.addressType, address.addressTypeDescription, address.fullAddress));
+                _typ_pes_entity.ADDRESSES.Add(new TYP_PES_ADDRESS(address.sequence, address.addressType, address.addressTypeDescription, address.fullAddress));
             }
 
             foreach (var bankAccount in entity.bankAccounts)
             {
-                typ_pes_entity.BANK_ACCOUNTS.Add(new TYP_PES_BANK_ACCOUNT(bankAccount.sequenceBankAccountNumber, bankAccount.bankAccountNumber, bankAccount.iban, bankAccount.startDate, bankAccount.endDate));
+                _typ_pes_entity.BANK_ACCOUNTS.Add(new TYP_PES_BANK_ACCOUNT(bankAccount.sequenceBankAccountNumber, bankAccount.bankAccountNumber, bankAccount.iban, bankAccount.startDate, bankAccount.endDate));
             }
 
             foreach (var document in entity.documents)
             {
-                typ_pes_entity.DOCUMENTS.Add(new TYP_PES_DOCUMENT(document.documentTypeCode, null, document.documentNumber));
+                _typ_pes_entity.DOCUMENTS.Add(new TYP_PES_DOCUMENT(document.documentTypeCode, null, document.documentNumber));
             }
 
             if (entity.riskProfile != null)
             {
-                typ_pes_entity.RISK_PROFILE = new TYP_RISK_PROFILE(entity.riskProfile.code, null, entity.riskProfile.startDate, entity.riskProfile.endDate,
+                _typ_pes_entity.RISK_PROFILE = new TYP_RISK_PROFILE(entity.riskProfile.code, null, entity.riskProfile.startDate, entity.riskProfile.endDate,
                                                                    entity.riskProfile.proposal, entity.riskProfile.systemCode, null);
             }
 
             Serializer ser = new Serializer();
 
-            var xmlEntity = ser.Serialize<TYP_PES_ENTITY>(typ_pes_entity);
+            var _xmlEntity = ser.Serialize<TYP_PES_ENTITY>(_typ_pes_entity);
 
 
             //
@@ -90,7 +90,7 @@ namespace PowerEntity.Tools
             //return outputJson;
             //
 
-            return xmlEntity;
+            return _xmlEntity;
         }
 
         public static string SerializeBankAccountsToXML(List<BankAccount> bankAccounts)

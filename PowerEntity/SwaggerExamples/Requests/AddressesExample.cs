@@ -11,12 +11,12 @@ namespace PowerEntity.SwaggerExamples.Requests
     {
         public List<Address> GetExamples()
         {
-            var addresses = new List<Address>();
+            var _addresses = new List<Address>();
 
-            addresses.Add(new Address(1, "1", "Principal", "Rua Áurea, 1234, 1100-064 Lisboa"));
-            addresses.Add(new Address(2, "2", "Fiscal", "Rua da Prata, 2045, 1100-413 Lisboa"));
+            _addresses.Add(new Address(1, "1", "Principal", "Rua Áurea, 1234, 1100-064 Lisboa"));
+            _addresses.Add(new Address(2, "2", "Fiscal", "Rua da Prata, 2045, 1100-413 Lisboa"));
 
-            return addresses;
+            return _addresses;
         }
     }
 }

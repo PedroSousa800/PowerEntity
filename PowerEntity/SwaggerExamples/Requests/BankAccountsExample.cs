@@ -11,12 +11,12 @@ namespace PowerEntity.SwaggerExamples.Requests
     {
         public List<BankAccount> GetExamples()
         {
-            var bankAccounts = new List<BankAccount>();
+            var _bankAccounts = new List<BankAccount>();
 
-            bankAccounts.Add(new BankAccount(1, "000713751035311651480", "PT50000713751035311651480", "2015-03-05", null));
-            bankAccounts.Add(new BankAccount(2, "000731429517320503281", "PT50000731429517320503281", "2012-10-24", "2021-06-17"));
+            _bankAccounts.Add(new BankAccount(1, "000713751035311651480", "PT50000713751035311651480", "2015-03-05", null));
+            _bankAccounts.Add(new BankAccount(2, "000731429517320503281", "PT50000731429517320503281", "2012-10-24", "2021-06-17"));
 
-            return bankAccounts;
+            return _bankAccounts;
         }
     }
 }
