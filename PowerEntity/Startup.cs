@@ -77,8 +77,33 @@ namespace PowerEntity
 
             OracleConfiguration.WalletLocation = OracleConfiguration.TnsAdmin;
 
-            OracleConfiguration.CommandTimeout = 120;
+            OracleConfiguration.CommandTimeout = 60;
 
+
+            // This part below is contigence to solve a bug in ODP (Oracle.ManagedDataAccess.Client).
+            // Some times when call de the page on the first time this bug appears. 
+            // The message bug is: ORA-12570: Network Session: Unexpected packet read error
+
+            using (OracleConnection objConn = new OracleConnection())
+            {
+
+                objConn.ConnectionString = Startup.ConnectionString;
+
+                try
+                {
+                    objConn.Open();
+
+                }
+                catch (Exception)
+                {
+
+
+                }
+                finally
+                {
+                    objConn.Close();
+                }
+            }
         }
     }
 }
