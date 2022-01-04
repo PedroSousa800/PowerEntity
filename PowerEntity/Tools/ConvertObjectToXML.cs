@@ -41,6 +41,12 @@ namespace PowerEntity.Tools
                                                            entity.type.individual.maritalStatus, entity.type.individual.maritalStatusDescription,
                                                            entity.type.individual.isDeceased, entity.type.individual.deceasedDate,
                                                            entity.type.individual.isSelfEmployee, entity.type.individual.placeOfBirth);
+
+                foreach (var nationality in entity.type.individual.nationalities)
+                {
+                    _typ_pes_entity.PERSON.NATIONALITIES.Add(new TYP_PES_NATIONALITY(nationality.nationalityCode, null, nationality.isPrincipal));
+                }
+
             }
 
             if (entity.type.company != null)
@@ -51,10 +57,6 @@ namespace PowerEntity.Tools
                                                                        entity.type.company.companyTypeCode, entity.type.company.companyTypeCodeDescription,
                                                                        entity.type.company.website, entity.type.company.legalForm,
                                                                        entity.type.company.publicEntity, entity.type.company.isONG);
-                foreach (var nationality in entity.type.individual.nationalities)
-                {
-                    _typ_pes_entity.PERSON.NATIONALITIES.Add(new TYP_PES_NATIONALITY(nationality.nationalityCode, null, nationality.isPrincipal));
-                }
 
             }
 

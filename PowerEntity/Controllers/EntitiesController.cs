@@ -48,7 +48,7 @@ namespace PowerEntity.Controllers
         [ProducesResponseType(typeof(Entity), 200)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
         [ProducesResponseType(typeof(ErrorResponse404), 404)]
-        public ActionResult<Entity> Get([DefaultValue(70)][Required] string IdEntity,
+        public ActionResult<Entity> Get([DefaultValue(10592272)][Required] string IdEntity,
                                         [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
                                         [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
                                         [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
@@ -310,7 +310,7 @@ namespace PowerEntity.Controllers
         [ProducesResponseType(typeof(List<Address>), 200)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
         [ProducesResponseType(typeof(ErrorResponse404), 404)]
-        public ActionResult<List<Address>> GetAddresses([DefaultValue(70)][Required] string IdEntity,
+        public ActionResult<List<Address>> GetAddresses([DefaultValue(10592272)][Required] string IdEntity,
                                                         [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
                                                         [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
                                                         [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
@@ -398,7 +398,7 @@ namespace PowerEntity.Controllers
         [ProducesResponseType(typeof(List<Address>), 201)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
         [ProducesResponseType(typeof(ErrorResponse404), 404)]
-        public ActionResult<List<BankAccount>> PutAddresses([DefaultValue(70)][Required] string IdEntity,
+        public ActionResult<List<BankAccount>> PutAddresses([DefaultValue(10592272)][Required] string IdEntity,
                                                             [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
                                                             [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
                                                             [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
@@ -494,7 +494,7 @@ namespace PowerEntity.Controllers
         [ProducesResponseType(typeof(List<BankAccount>), 200)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
         [ProducesResponseType(typeof(ErrorResponse404), 404)]
-        public ActionResult<BankAccount> GetBankAccounts([DefaultValue(70)][Required] string IdEntity,
+        public ActionResult<BankAccount> GetBankAccounts([DefaultValue(10592272)][Required] string IdEntity,
                                                          [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
                                                          [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
                                                          [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
@@ -581,7 +581,7 @@ namespace PowerEntity.Controllers
         [ProducesResponseType(typeof(List<BankAccount>), 201)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
         [ProducesResponseType(typeof(ErrorResponse404), 404)]
-        public ActionResult<List<BankAccount>> PutBankAccounts([DefaultValue(70)][Required] string IdEntity,
+        public ActionResult<List<BankAccount>> PutBankAccounts([DefaultValue(10592272)][Required] string IdEntity,
                                                                [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
                                                                [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
                                                                [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
@@ -679,7 +679,7 @@ namespace PowerEntity.Controllers
         [ProducesResponseType(typeof(List<Document>), 200)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
         [ProducesResponseType(typeof(ErrorResponse404), 404)]
-        public ActionResult<Document> GetDocuments([DefaultValue(70)][Required] string IdEntity,
+        public ActionResult<Document> GetDocuments([DefaultValue(10592272)][Required] string IdEntity,
                                                    [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
                                                    [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
                                                    [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
@@ -767,7 +767,7 @@ namespace PowerEntity.Controllers
         [ProducesResponseType(typeof(List<Document>), 201)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
         [ProducesResponseType(typeof(ErrorResponse404), 404)]
-        public ActionResult<List<Document>> PutDocuments([DefaultValue(70)][Required] string IdEntity,
+        public ActionResult<List<Document>> PutDocuments([DefaultValue(10592272)][Required] string IdEntity,
                                                          [DefaultValue("AGEAS")][Description("Company Id.")][FromHeader][Required] string IdCompany,
                                                          [DefaultValue("AGEAS")][Description][FromHeader][Required] string IdNetwork,
                                                          [DefaultValue("DUCKCREEK")][Description][FromHeader][Required] string BsSolution,

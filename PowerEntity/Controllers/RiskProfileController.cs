@@ -58,7 +58,7 @@ namespace PowerEntity.Controllers
         [ProducesResponseType(typeof(ErrorResponse404), 404)]
 
         [HttpGet]
-        public ActionResult<RiskProfile> GetRiskProfile([DefaultValue(70)][Required] string IdEntity,
+        public ActionResult<RiskProfile> GetRiskProfile([DefaultValue(10592272)][Required] string IdEntity,
                                                         [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
                                                         [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
                                                         [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
@@ -149,7 +149,7 @@ namespace PowerEntity.Controllers
         [ProducesResponseType(typeof(RiskProfile), 201)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
         [ProducesResponseType(typeof(ErrorResponse404), 404)]
-        public ActionResult<RiskProfile> PutRiskProfile([DefaultValue(70)][Required] string IdEntity,
+        public ActionResult<RiskProfile> PutRiskProfile([DefaultValue(10592272)][Required] string IdEntity,
                                                         [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
                                                         [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
                                                         [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,

@@ -14,7 +14,7 @@ namespace Swagger.Demo.SwaggerExamples.Requests
         public Entity GetExamples()
         {
             var _entity = new Entity();
-            _entity.idEntity = "70";
+            _entity.idEntity = "10592272";
             _entity.vatNumber = "265078431";
             _entity.isForeignVat = false;
             _entity.countryCode = "PRT";
@@ -22,10 +22,10 @@ namespace Swagger.Demo.SwaggerExamples.Requests
             var _nationalities = new List<Nationality>();
             _nationalities.Add(new Nationality("PRT", null, "S"));
 
-            _entity.type.individual = new Individual("Maria Silva",
+            _entity.type.individual = new Individual("João Silva",
                                                     DateTime.ParseExact("1990-06-06", "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                                                    "F", null,
-                                                    "S", null,
+                                                    "M", "Masculino",
+                                                    "S", "Solteiro(a)",
                                                     "N", null,
                                                     "N", "Portugal",
                                                     _nationalities);
