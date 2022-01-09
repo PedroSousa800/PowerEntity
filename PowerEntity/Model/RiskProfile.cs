@@ -20,31 +20,13 @@ namespace PowerEntity.Model
         {
 
         }
-        public RiskProfile(string code, string description, string startDate, string endDate,
+        public RiskProfile(string code, string description, DateTime? startDate, DateTime? endDate,
                            string proposal, string systemCode, string systemDescription)
         {
             this.code = code;
             this.description = description;
-            if (!String.IsNullOrEmpty(startDate))
-            {
-                var _startDate = DateTime.ParseExact(startDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                this.startDate = _startDate;
-            }
-            else
-            {
-                this.startDate = null;
-            }
-
-            if (!String.IsNullOrEmpty(endDate))
-            {
-                var _endDate = DateTime.ParseExact(endDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                this.endDate = _endDate;
-            }
-            else
-            {
-                this.endDate = null;
-            }
-
+            this.startDate = startDate;
+            this.endDate = endDate;
             this.proposal = proposal;
             this.systemCode = systemCode;
             this.systemDescription = systemDescription;

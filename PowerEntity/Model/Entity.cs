@@ -27,6 +27,7 @@ namespace PowerEntity.Model
         {
             
         }
+        
 
     }
 

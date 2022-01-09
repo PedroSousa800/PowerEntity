@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using PowerEntity.Tools;
-using PowerEntity.Tools.UpperTypes;
 
 namespace PowerEntity.Model
 {
@@ -24,50 +22,7 @@ namespace PowerEntity.Model
         {
 
         }
-        public Individual(string name, DateTime? birthdate, string gender, string genderDescription,
-                          string maritalStatus, string maritalStatusDescription, string isDeceased,
-                          DateTime? deceasedDate, string isSelfEmployee, string placeOfBirth,
-                          List<TYP_PES_NATIONALITY> nationalities)
-        {
-
-            this.name = name;
-            this.birthdate = birthdate;
-            this.gender = gender;
-            this.genderDescription = genderDescription;
-            this.maritalStatus = maritalStatus;
-            this.maritalStatusDescription = maritalStatusDescription;
-
-            if (isDeceased == "S")
-            {
-                this.isDeceased = true;
-            }
-            else
-            {
-                this.isDeceased = false;
-            }
-
-            this.deceasedDate = deceasedDate;
-
-            if (isSelfEmployee == "S")
-            {
-                this.isSelfEmployee = true;
-            }
-            else
-            {
-                this.isSelfEmployee = false;
-            }
-
-            this.placeOfBirth = placeOfBirth;
-
-            if (nationalities.Count > 0)
-            {
-                foreach (var nationality in nationalities)
-                {
-                    this.nationalities.Add(new Nationality(nationality.NATIONALITY_CODE, nationality.NATIONALITY_DESCRIPTION, nationality.IS_PRINCIPAL));
-                }
-            }
-
-        }
+        
 
         public Individual(string name)
         {

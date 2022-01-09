@@ -34,13 +34,13 @@ namespace Swagger.Demo.SwaggerExamples.Requests
             _entity.addresses.Add(new Address(1, "1", "Principal", "Av. da Liberdade 182;, 1250-146 Lisboa"));
 
             _entity.bankAccounts.Add(new BankAccount(1, "000713751035311651480", "PT50000713751035311651480",
-                                        "2015-03-05", null));
+                                        DateTime.ParseExact("2015-03-05", "yyyy-MM-dd", CultureInfo.InvariantCulture), null));
             _entity.bankAccounts.Add(new BankAccount(2, "000731429517320503281", "PT50000731429517320503281",
-                                        "2012-10-24", null));
+                                        DateTime.ParseExact("2012-10-24", "yyyy-MM-dd", CultureInfo.InvariantCulture), null));
 
             _entity.documents.Add(new Document("U", "Cartão Cidadão", "34408782"));
 
-            _entity.riskProfile = new RiskProfile("2", "Perfil conservador", "2021-11-14", null, "2547889", "1", "Portal de Agentes");
+            _entity.riskProfile = new RiskProfile("2", "Perfil conservador", DateTime.ParseExact("2021-11-14", "yyyy-MM-dd", CultureInfo.InvariantCulture), null, "2547889", "1", "Portal de Agentes");
 
             return _entity;
         }

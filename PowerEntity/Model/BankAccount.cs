@@ -15,33 +15,13 @@ namespace PowerEntity.Model
         {
 
         }
-        public BankAccount(int? sequenceBankAccountNumber, string bankAccountNumber, string iban, string startDate, string endDate)
+        public BankAccount(int? sequenceBankAccountNumber, string bankAccountNumber, string iban, DateTime? startDate, DateTime? endDate)
         {
             this.sequenceBankAccountNumber = sequenceBankAccountNumber;
             this.bankAccountNumber = bankAccountNumber;
             this.iban = iban;
-
-            if (!String.IsNullOrEmpty(startDate))
-            {
-                var _startDate = DateTime.ParseExact(startDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                this.startDate = _startDate;
-            }
-            else
-            {
-                this.startDate = null;
-            }
-
-            if (!String.IsNullOrEmpty(endDate))
-            {
-                var _endDate = DateTime.ParseExact(endDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                this.endDate = _endDate;
-            }
-            else
-            {
-                this.endDate = null;
-            }
-
+            this.startDate = startDate;
+            this.endDate = endDate;
         }
     }
-
 }

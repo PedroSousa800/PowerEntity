@@ -14,6 +14,7 @@ using PowerEntity.Tools;
 using PowerEntity.Tools.UpperTypes;
 using Tools;
 using Oracle.ManagedDataAccess.Client;
+using PowerEntity.UDT;
 
 namespace PowerEntity.Controllers
 {
@@ -75,8 +76,17 @@ namespace PowerEntity.Controllers
                 objCmd.Connection = objConn;
                 objCmd.CommandText = "PKG_EDM_API.pro_get_risk_profile";
                 objCmd.CommandType = CommandType.StoredProcedure;
+
+                //Adding parameters
                 objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
-                objCmd.Parameters.Add("p_out_risk_profile_xml", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
+
+                OracleParameter pRet = new OracleParameter();
+                pRet.ParameterName = "p_risk_profile";
+                pRet.OracleDbType = OracleDbType.Object;
+                pRet.Direction = ParameterDirection.Output;
+                pRet.UdtTypeName = "TYP_PES_RISK_PROFILE";
+                objCmd.Parameters.Add(pRet);
+
                 objCmd.Parameters.Add("p_cderror", OracleDbType.Int32).Direction = ParameterDirection.Output;
                 objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
@@ -85,7 +95,6 @@ namespace PowerEntity.Controllers
                     objConn.Open();
                     objCmd.ExecuteNonQuery();
 
-                    var _xmlReturn = objCmd.Parameters["p_out_risk_profile_xml"].Value.ToString();
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
@@ -105,15 +114,16 @@ namespace PowerEntity.Controllers
                         }
                     }
 
+                    var _riskProfileUdt = (TypPesRiskProfileUdt)objCmd.Parameters["p_risk_profile"].Value;
+
                     objConn.Close();
 
-                    Serializer ser = new Serializer();
+                    var _riskProfile = new RiskProfile(_riskProfileUdt.CodRiskProfile, _riskProfileUdt.RiskProfileDescription,
+                                                       _riskProfileUdt.StartDate, _riskProfileUdt.EndDate,
+                                                       _riskProfileUdt.NmProposal, _riskProfileUdt.IdSystem,
+                                                       _riskProfileUdt.SystemDescription);
 
-                    var upperRiskProfile = ser.Deserialize<TYP_PES_OBJ_RISK_PROFILE>(_xmlReturn);
-
-                    var lowerRiskProfile = Converter.RiskProfileUpperToLower(upperRiskProfile);
-
-                    return Ok(lowerRiskProfile);
+                    return Ok(_riskProfile);
 
                 }
                 catch (Exception ex)
@@ -157,10 +167,15 @@ namespace PowerEntity.Controllers
                                                         RiskProfile riskProfile)
 
         {
-            
-            var xmlRiskProfile = ConvertObjectToXML.SerializeRiskProfileToXML(riskProfile);
 
-            string _xmlReturn;
+            var _riskProfileUdt = new TypPesRiskProfileUdt()
+            {
+                CodRiskProfile = riskProfile.code,
+                StartDate = riskProfile.startDate,
+                EndDate = riskProfile.endDate,
+                IdSystem = riskProfile.systemCode,
+                NmProposal = riskProfile.proposal
+            };
 
             using (OracleConnection objConn = new OracleConnection())
             {
@@ -171,8 +186,18 @@ namespace PowerEntity.Controllers
                 objCmd.Connection = objConn;
                 objCmd.CommandText = "PKG_EDM_API.pro_set_risk_profile";
                 objCmd.CommandType = CommandType.StoredProcedure;
+
+                //Adding parameters
                 objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
-                objCmd.Parameters.Add("p_in_risk_profile_xml", OracleDbType.Varchar2, 32000).Value = xmlRiskProfile;
+
+                OracleParameter pRet = new OracleParameter();
+                pRet.ParameterName = "p_risk_profile";
+                pRet.OracleDbType = OracleDbType.Object;
+                pRet.Direction = ParameterDirection.Input;
+                pRet.UdtTypeName = "TYP_PES_RISK_PROFILE";
+                pRet.Value = _riskProfileUdt;
+                objCmd.Parameters.Add(pRet);
+
                 objCmd.Parameters.Add("p_cderror", OracleDbType.Int32).Direction = ParameterDirection.Output;
                 objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
@@ -203,18 +228,15 @@ namespace PowerEntity.Controllers
                     return Ok(new ErrorResponse(_cderror, _dserror));
 
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
 
-                    _xmlReturn = ex.ToString();
-
-                    return BadRequest(_xmlReturn);
+                    return BadRequest(e.Message);
                 }
 
             }
 
         }
-
 
     }
 

@@ -21,24 +21,14 @@ namespace PowerEntity.Model
         {
 
         }
-        public Company(string companyName, string foundingDate, int? totalEmployes,
+        public Company(string companyName, DateTime? foundingDate, int? totalEmployes,
                        int? grossAnnualRevenue, int? wagesAmount, int? entityCapital,
                        string companyTypeCode, string companyTypeCodeDescription, string legalForm,
                        string website, string publicEntity, string isONG)
 
         {
             this.companyName = companyName;
-
-            if (!String.IsNullOrEmpty(foundingDate))
-            {
-                var _foundingDate = DateTime.ParseExact(foundingDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                this.foundingDate = _foundingDate;
-            }
-            else
-            {
-                this.foundingDate = null;
-            }
-            
+            this.foundingDate = foundingDate;
             this.totalEmployes = totalEmployes;
             this.grossAnnualRevenue = grossAnnualRevenue;
             this.wagesAmount = wagesAmount;
