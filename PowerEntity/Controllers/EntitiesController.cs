@@ -6,7 +6,6 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using PowerEntity.Tools;
-using Tools;
 using PowerEntity.Model;
 using System.Globalization;
 using Oracle.ManagedDataAccess.Client;

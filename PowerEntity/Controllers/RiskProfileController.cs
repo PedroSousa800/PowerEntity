@@ -11,8 +11,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using PowerEntity.Model;
 using PowerEntity.Tools;
-using PowerEntity.Tools.UpperTypes;
-using Tools;
 using Oracle.ManagedDataAccess.Client;
 using PowerEntity.UDT;
 
