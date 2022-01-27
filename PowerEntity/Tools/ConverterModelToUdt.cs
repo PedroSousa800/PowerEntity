@@ -1,4 +1,4 @@
-﻿using PowerEntity.Model;
+﻿using PowerEntity.Models.Entities;
 using PowerEntity.UDT;
 using System.Collections.Generic;
 

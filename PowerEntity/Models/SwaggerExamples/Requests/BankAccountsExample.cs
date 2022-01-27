@@ -1,12 +1,10 @@
-﻿using PowerEntity.Model;
+﻿using PowerEntity.Models.Entities;
 using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Globalization;
 
-namespace PowerEntity.SwaggerExamples.Requests
+namespace PowerEntity.Models.SwaggerExamples.Requests
 {
     public class BankAccountsExample : IExamplesProvider<List<BankAccount>>
     {

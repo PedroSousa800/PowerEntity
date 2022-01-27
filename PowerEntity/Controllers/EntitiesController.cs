@@ -6,10 +6,11 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using PowerEntity.Tools;
-using PowerEntity.Model;
-using System.Globalization;
+using PowerEntity.Models.Entities;
 using Oracle.ManagedDataAccess.Client;
 using PowerEntity.UDT;
+using System.Threading.Tasks;
+using PowerEntity.Models.SwaggerExamples.ErrorModels;
 
 namespace PowerEntity.Controllers
 {
@@ -47,82 +48,17 @@ namespace PowerEntity.Controllers
         [ProducesResponseType(typeof(Entity), 200)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
         [ProducesResponseType(typeof(ErrorResponse404), 404)]
-        public ActionResult<Entity> Get([DefaultValue(10592272)][Required] string IdEntity,
-                                        [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
-                                        [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
-                                        [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
-                                        [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser)
+        public async Task<ActionResult<Entity>> Get([DefaultValue(10592272)][Required] string IdEntity,
+                                                    [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
+                                                    [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
+                                                    [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
+                                                    [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser)
 
-        {
-
-            //string _xmlReturn;
-
-            //using (OracleConnection objConn = new OracleConnection())
-            //{
-
-            //    objConn.ConnectionString = Startup.ConnectionString;
-
-            //    OracleCommand objCmd = new OracleCommand();
-            //    objCmd.Connection = objConn;
-            //    objCmd.CommandText = "PKG_EDM_API.pro_get_entity";
-            //    objCmd.CommandType = CommandType.StoredProcedure;
-            //    objCmd.Parameters.Add("p_entity_id", OracleDbType.Varchar2, 32000).Value = IdEntity;
-            //    objCmd.Parameters.Add("p_out_entity_type", OracleDbType.Varchar2, 32000).Direction = ParameterDirection.Output;
-            //    objCmd.Parameters.Add("p_cderror", OracleDbType.Int32).Direction = ParameterDirection.Output;
-            //    objCmd.Parameters.Add("p_dserror", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
-
-            //    try
-            //    {
-            //        objConn.Open();
-            //        objCmd.ExecuteNonQuery();
-
-            //        _xmlReturn = objCmd.Parameters["p_out_entity_type"].Value.ToString();
-            //        var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
-            //        var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
-
-            //        objConn.Close();
-
-            //        if (_cderror != 0)
-            //        {
-            //            var _errorResponse = new ErrorResponse(_cderror, _dserror);
-
-            //            if (_cderror == 10001)
-            //            {
-            //                return NotFound(_errorResponse);
-            //            }
-            //            else
-            //            {
-            //                return BadRequest(_errorResponse);
-            //            }
-            //        }
-
-            //        Serializer ser = new Serializer();
-
-            //        //return Ok(_xmlReturn);
-
-            //        var entityUpper = ser.Deserialize<TYP_PES_ENTITY>(_xmlReturn);
-
-            //        var entityLower = Converter.EntityUpperToLower(entityUpper);
-
-            //        return Ok(entityLower);
-
-            //    }
-            //    catch (Exception ex)
-            //    {
-
-            //        _xmlReturn = ex.ToString();
-
-            //        return BadRequest(_xmlReturn);
-            //    }
-
-            //}
-
-
-           
+        {           
             using (OracleConnection objConn = new OracleConnection())
             {
 
-                objConn.ConnectionString = Startup.ConnectionString;
+                objConn.ConnectionString = Startup.GetConnectionString();
 
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
@@ -142,13 +78,13 @@ namespace PowerEntity.Controllers
 
                 try
                 {
-                    objConn.Open();
-                    objCmd.ExecuteNonQuery();
+                    await objConn.OpenAsync();
+                    await objCmd.ExecuteNonQueryAsync();
 
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
-                    objConn.Close();
+                    await objConn.CloseAsync();
 
                     if (_cderror != 0)
                     {
@@ -166,8 +102,6 @@ namespace PowerEntity.Controllers
 
                     var _entityUdt = (TypPesEntityUdt)objCmd.Parameters["p_out_entity_type"].Value;
 
-                    objConn.Close();
-
                     return Ok(ConverterUdtToModel.EntityFromUdtToModel(_entityUdt));
 
                 }
@@ -175,9 +109,7 @@ namespace PowerEntity.Controllers
                 {
                     return BadRequest(ex.Message);
                 }
-
             }
-
         }
 
 
@@ -195,17 +127,17 @@ namespace PowerEntity.Controllers
         [Route("/v1/[controller]")]
         [ProducesResponseType(typeof(Entity), 201)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
-        public ActionResult<Entity> Post([DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
-                                         [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
-                                         [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
-                                         [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser,
-                                          Entity entity)
+        public async Task<ActionResult<Entity>> Post([DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
+                                                     [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
+                                                     [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
+                                                     [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser,
+                                                     Entity entity)
         {
 
             using (OracleConnection objConn = new OracleConnection())
             {
 
-                objConn.ConnectionString = Startup.ConnectionString;
+                objConn.ConnectionString = Startup.GetConnectionString();
 
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
@@ -232,8 +164,8 @@ namespace PowerEntity.Controllers
 
                 try
                 {
-                    objConn.Open();
-                    objCmd.ExecuteNonQuery();
+                    await objConn.OpenAsync();
+                    await objCmd.ExecuteNonQueryAsync();
 
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
 
@@ -241,7 +173,7 @@ namespace PowerEntity.Controllers
                     {
                         var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
-                        objConn.Close();
+                        await objConn.CloseAsync();
 
                         var _errorResponse = new ErrorResponse(_cderror, _dserror);
 
@@ -250,7 +182,7 @@ namespace PowerEntity.Controllers
 
                     var _entityUdt = (TypPesEntityUdt)objCmd.Parameters["p_out_entity_type"].Value;
 
-                    objConn.Close();
+                    await objConn.CloseAsync();
 
                     return Ok(ConverterUdtToModel.EntityFromUdtToModel(_entityUdt));
 
@@ -263,8 +195,6 @@ namespace PowerEntity.Controllers
             }
 
         }
-
-
 
         /// <summary>
         ///    Updates an entity
@@ -280,17 +210,17 @@ namespace PowerEntity.Controllers
         [Route("/v1/[controller]")]
         [ProducesResponseType(typeof(Entity), 201)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
-        public ActionResult<Entity> Put([DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
-                                        [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
-                                        [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
-                                        [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser,
-                                        Entity entity)
+        public async Task<ActionResult<Entity>> Put([DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
+                                                    [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
+                                                    [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
+                                                    [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser,
+                                                    Entity entity)
         {
 
             using (OracleConnection objConn = new OracleConnection())
             {
 
-                objConn.ConnectionString = Startup.ConnectionString;
+                objConn.ConnectionString = Startup.GetConnectionString();
 
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
@@ -317,8 +247,8 @@ namespace PowerEntity.Controllers
 
                 try
                 {
-                    objConn.Open();
-                    objCmd.ExecuteNonQuery();
+                    await objConn.OpenAsync();
+                    await objCmd.ExecuteNonQueryAsync();
 
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
 
@@ -326,7 +256,7 @@ namespace PowerEntity.Controllers
                     {
                         var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
-                        objConn.Close();
+                        await objConn.CloseAsync();
 
                         var _errorResponse = new ErrorResponse(_cderror, _dserror);
 
@@ -335,7 +265,7 @@ namespace PowerEntity.Controllers
 
                     var _entityUdt = (TypPesEntityUdt)objCmd.Parameters["p_out_entity_type"].Value;
 
-                    objConn.Close();
+                    await objConn.CloseAsync();
 
                     return Ok(ConverterUdtToModel.EntityFromUdtToModel(_entityUdt));
 
@@ -372,17 +302,17 @@ namespace PowerEntity.Controllers
         [ProducesResponseType(typeof(List<Address>), 200)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
         [ProducesResponseType(typeof(ErrorResponse404), 404)]
-        public ActionResult<List<Address>> GetAddresses([DefaultValue(10592272)][Required] string IdEntity,
-                                                        [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
-                                                        [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
-                                                        [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
-                                                        [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser)
+        public async Task<ActionResult<List<Address>>> GetAddresses([DefaultValue(10592272)][Required] string IdEntity,
+                                                                    [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
+                                                                    [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
+                                                                    [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
+                                                                    [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser)
         {
 
             using (OracleConnection objConn = new OracleConnection())
             {
 
-                objConn.ConnectionString = Startup.ConnectionString;
+                objConn.ConnectionString = Startup.GetConnectionString();
 
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
@@ -402,13 +332,13 @@ namespace PowerEntity.Controllers
 
                 try
                 {
-                    objConn.Open();
-                    objCmd.ExecuteNonQuery();
+                    await objConn.OpenAsync();
+                    await objCmd.ExecuteNonQueryAsync();
 
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
-                    objConn.Close();
+                    await objConn.CloseAsync();
 
                     if (_cderror != 0)
                     {
@@ -443,10 +373,7 @@ namespace PowerEntity.Controllers
                 {
                     return BadRequest(ex.Message.ToString());
                 }
-
             }
-
-
         }
 
 
@@ -468,12 +395,12 @@ namespace PowerEntity.Controllers
         [ProducesResponseType(typeof(List<Address>), 201)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
         [ProducesResponseType(typeof(ErrorResponse404), 404)]
-        public ActionResult<List<BankAccount>> PutAddresses([DefaultValue(10592272)][Required] string IdEntity,
-                                                            [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
-                                                            [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
-                                                            [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
-                                                            [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser,
-                                                            List<Address> addresses)
+        public async Task<ActionResult<List<BankAccount>>> PutAddresses([DefaultValue(10592272)][Required] string IdEntity,
+                                                                        [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
+                                                                        [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
+                                                                        [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
+                                                                        [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser,
+                                                                        List<Address> addresses)
         {
 
             TypPesAddressUdt[] _addressesUdt = new TypPesAddressUdt[addresses.Count];
@@ -496,7 +423,7 @@ namespace PowerEntity.Controllers
             using (OracleConnection objConn = new OracleConnection())
             {
 
-                objConn.ConnectionString = Startup.ConnectionString;
+                objConn.ConnectionString = Startup.GetConnectionString();
 
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
@@ -524,13 +451,13 @@ namespace PowerEntity.Controllers
 
                 try
                 {
-                    objConn.Open();
-                    objCmd.ExecuteNonQuery();
+                    await objConn.OpenAsync();
+                    await objCmd.ExecuteNonQueryAsync();
 
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
-                    objConn.Close();
+                    await objConn.CloseAsync();
 
                     if (_cderror != 0)
                     {
@@ -593,18 +520,18 @@ namespace PowerEntity.Controllers
         [ProducesResponseType(typeof(List<BankAccount>), 200)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
         [ProducesResponseType(typeof(ErrorResponse404), 404)]
-        public ActionResult<BankAccount> GetBankAccounts([DefaultValue(10592272)][Required] string IdEntity,
-                                                         [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
-                                                         [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
-                                                         [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
-                                                         [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser)
+        public async Task<ActionResult<BankAccount>> GetBankAccounts([DefaultValue(10592272)][Required] string IdEntity,
+                                                                     [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
+                                                                     [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
+                                                                     [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
+                                                                     [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser)
 
         {
 
             using (OracleConnection objConn = new OracleConnection())
             {
 
-                objConn.ConnectionString = Startup.ConnectionString;
+                objConn.ConnectionString = Startup.GetConnectionString();
 
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
@@ -626,13 +553,13 @@ namespace PowerEntity.Controllers
 
                 try
                 {
-                    objConn.Open();
-                    objCmd.ExecuteNonQuery();
+                    await objConn.OpenAsync();
+                    await objCmd.ExecuteNonQueryAsync();
 
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
-                    objConn.Close();
+                    await objConn.CloseAsync();
 
                     if (_cderror != 0)
                     {
@@ -687,12 +614,12 @@ namespace PowerEntity.Controllers
         [ProducesResponseType(typeof(List<BankAccount>), 201)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
         [ProducesResponseType(typeof(ErrorResponse404), 404)]
-        public ActionResult<List<BankAccount>> PutBankAccounts([DefaultValue(10592272)][Required] string IdEntity,
-                                                               [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
-                                                               [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
-                                                               [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
-                                                               [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser,
-                                                               List<BankAccount> bankAccounts)
+        public async Task<ActionResult<List<BankAccount>>> PutBankAccounts([DefaultValue(10592272)][Required] string IdEntity,
+                                                                           [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
+                                                                           [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
+                                                                           [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
+                                                                           [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser,
+                                                                           List<BankAccount> bankAccounts)
         {
 
             TypPesBankAccountUdt[] _bankAccountsUdt = new TypPesBankAccountUdt[bankAccounts.Count];
@@ -716,7 +643,7 @@ namespace PowerEntity.Controllers
             using (OracleConnection objConn = new OracleConnection())
             {
 
-                objConn.ConnectionString = Startup.ConnectionString;
+                objConn.ConnectionString = Startup.GetConnectionString();
 
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
@@ -745,13 +672,13 @@ namespace PowerEntity.Controllers
 
                 try
                 {
-                    objConn.Open();
-                    objCmd.ExecuteNonQuery();
+                    await objConn.OpenAsync();
+                    await objCmd.ExecuteNonQueryAsync();
 
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
-                    objConn.Close();
+                    await objConn.CloseAsync();
 
                     if (_cderror != 0)
                     {
@@ -766,8 +693,6 @@ namespace PowerEntity.Controllers
                             return BadRequest(_errorResponse);
                         }
                     }
-
-                    objConn.Close();
 
                     var _bankAccountsReturn = new List<BankAccount>();
 
@@ -813,18 +738,18 @@ namespace PowerEntity.Controllers
         [ProducesResponseType(typeof(List<Document>), 200)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
         [ProducesResponseType(typeof(ErrorResponse404), 404)]
-        public ActionResult<Document> GetDocuments([DefaultValue(10592272)][Required] string IdEntity,
-                                                   [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
-                                                   [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
-                                                   [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
-                                                   [DefaultValue("\\BS\\DUCKCREEKD")][Description][FromHeader][Required] string BsUser)
+        public async Task<ActionResult<Document>> GetDocuments([DefaultValue(10592272)][Required] string IdEntity,
+                                                               [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
+                                                               [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
+                                                               [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
+                                                               [DefaultValue("\\BS\\DUCKCREEKD")][Description][FromHeader][Required] string BsUser)
 
         {
 
             using (OracleConnection objConn = new OracleConnection())
             {
 
-                objConn.ConnectionString = Startup.ConnectionString;
+                objConn.ConnectionString = Startup.GetConnectionString();
 
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
@@ -844,13 +769,13 @@ namespace PowerEntity.Controllers
 
                 try
                 {
-                    objConn.Open();
-                    objCmd.ExecuteNonQuery();
+                    await objConn.OpenAsync();
+                    await objCmd.ExecuteNonQueryAsync();
 
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
-                    objConn.Close();
+                    await objConn.CloseAsync();
 
                     if (_cderror != 0)
                     {
@@ -905,12 +830,12 @@ namespace PowerEntity.Controllers
         [ProducesResponseType(typeof(List<Document>), 201)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
         [ProducesResponseType(typeof(ErrorResponse404), 404)]
-        public ActionResult<List<Document>> PutDocuments([DefaultValue(10592272)][Required] string IdEntity,
-                                                         [DefaultValue("AGEAS")][Description("Company Id.")][FromHeader][Required] string IdCompany,
-                                                         [DefaultValue("AGEAS")][Description][FromHeader][Required] string IdNetwork,
-                                                         [DefaultValue("DUCKCREEK")][Description][FromHeader][Required] string BsSolution,
-                                                         [DefaultValue("\\BS\\DUCKCREEKD")][Description][FromHeader][Required] string BsUser,
-                                                         List<Document> documents)
+        public async Task<ActionResult<List<Document>>> PutDocuments([DefaultValue(10592272)][Required] string IdEntity,
+                                                                     [DefaultValue("AGEAS")][Description("Company Id.")][FromHeader][Required] string IdCompany,
+                                                                     [DefaultValue("AGEAS")][Description][FromHeader][Required] string IdNetwork,
+                                                                     [DefaultValue("DUCKCREEK")][Description][FromHeader][Required] string BsSolution,
+                                                                     [DefaultValue("\\BS\\DUCKCREEKD")][Description][FromHeader][Required] string BsUser,
+                                                                     List<Document> documents)
 
         {
 
@@ -931,7 +856,7 @@ namespace PowerEntity.Controllers
             using (OracleConnection objConn = new OracleConnection())
             {
 
-                objConn.ConnectionString = Startup.ConnectionString;
+                objConn.ConnectionString = Startup.GetConnectionString();
 
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
@@ -962,13 +887,13 @@ namespace PowerEntity.Controllers
 
                 try
                 {
-                    objConn.Open();
-                    objCmd.ExecuteNonQuery();
+                    await objConn.OpenAsync();
+                    await objCmd.ExecuteNonQueryAsync();
 
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
-                    objConn.Close();
+                    await objConn.CloseAsync();
 
                     if (_cderror != 0)
                     {
@@ -1005,53 +930,5 @@ namespace PowerEntity.Controllers
             }
 
         }
-
-
-
-        //[HttpGet]
-        //[Route("/v1/[controller]/{IdEntity}/Teste")]
-        //[ProducesResponseType(typeof(List<Document>), 201)]
-        //[ProducesResponseType(typeof(ErrorResponse400), 400)]
-        //[ProducesResponseType(typeof(ErrorResponse404), 404)]
-        //public ActionResult<List<Document>> GetTeste([Required] string IdEntity,
-        //                                             [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
-        //                                             [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
-        //                                             [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
-        //                                             [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser)
-
-
-        //{
-        //    var entity = new Entity();
-        //    entity.idEntity = "70";
-        //    entity.vatNumber = "265078431";
-        //    entity.isForeignVat = false;
-        //    entity.countryCode = "PRT";
-
-        //    var _nationalities = new List<Nationality>();
-        //    _nationalities.Add(new Nationality("PRT", null, "S"));
-
-        //    //entity.type = new IndividualOrganization();
-
-        //    var _individual = new Individual("Ana Leitão",
-        //                                            DateTime.ParseExact("1952-06-06", "yyyy-MM-dd", CultureInfo.InvariantCulture),
-        //                                            "M", null,
-        //                                            "S", null,
-        //                                            "N", null,
-        //                                            "N", "Portugal",
-        //                                            _nationalities);
-
-        //    entity.type.individual = new Individual("Ana Leitão",
-        //                                            DateTime.ParseExact("1952-06-06", "yyyy-MM-dd", CultureInfo.InvariantCulture),
-        //                                            "M", null,
-        //                                            "S", null,
-        //                                            "N", null,
-        //                                            "N", "Portugal",
-        //                                            _nationalities);
-
-        //    entity.type.individual = _individual;
-        //    entity.riskProfile = new RiskProfile("2", "Perfil conservador", "2021-11-14", null, "2547889", "1", "Portal de Agentes");
-
-        //    return Ok();
-        //}
     }
 }

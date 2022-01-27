@@ -22,10 +22,22 @@ namespace PowerEntity
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            SetConnectionString(Configuration.GetConnectionString("DefaultConnection"));
         }
 
         public IConfiguration Configuration { get; }
-        public static string ConnectionString { get; set; }
+
+        private static string ConnectionString;
+
+        public static string GetConnectionString()
+        {
+            return ConnectionString;
+        }
+
+        private static void SetConnectionString(string value)
+        {
+            ConnectionString = value;
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -64,11 +76,10 @@ namespace PowerEntity
                 endpoints.MapControllers();
             });
 
-            ConnectionString = "User ID=ADMIN; Password=TestASPNET2021; Data Source=dbpowerentity_high";
-
             if (env.IsDevelopment())
             {
-                OracleConfiguration.TnsAdmin = @"C:\Pedro\Treinamento\C#\TestarConexaoWeb\TestarConexaoWeb\DB";
+                //OracleConfiguration.TnsAdmin = @"C:\Pedro\Treinamento\C#\TestarConexaoWeb\TestarConexaoWeb\DB";
+                OracleConfiguration.TnsAdmin = @"/home/pedro/Development/ASP.NET/PowerEntity/PowerEntity/DB";
             }
             else
             {
@@ -87,7 +98,7 @@ namespace PowerEntity
             using (OracleConnection objConn = new OracleConnection())
             {
 
-                objConn.ConnectionString = Startup.ConnectionString;
+                objConn.ConnectionString = Startup.GetConnectionString();
 
                 try
                 {

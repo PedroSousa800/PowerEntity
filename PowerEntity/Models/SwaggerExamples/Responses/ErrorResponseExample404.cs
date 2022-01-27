@@ -1,11 +1,11 @@
-﻿using PowerEntity.Model;
+﻿using PowerEntity.Models.SwaggerExamples.ErrorModels;
 using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Swagger.Demo.SwaggerExamples.Responses
+namespace PowerEntity.Models.SwaggerExamples.Responses
 {
     public class ErrorResponseExample404 : IExamplesProvider<ErrorResponse404>
     {

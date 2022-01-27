@@ -1,18 +1,15 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Swashbuckle.AspNetCore.Annotations;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
-using PowerEntity.Model;
-using PowerEntity.Tools;
+using PowerEntity.Models.Entities;
 using Oracle.ManagedDataAccess.Client;
 using PowerEntity.UDT;
+using PowerEntity.Models.SwaggerExamples.ErrorModels;
 
 namespace PowerEntity.Controllers
 {
@@ -52,23 +49,23 @@ namespace PowerEntity.Controllers
         ///         
         [HttpGet]
         [Route("/v1/[controller]/{IdEntity}/RiskProfile")]
-        [ProducesResponseType(typeof(RiskProfile), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
         [ProducesResponseType(typeof(ErrorResponse404), 404)]
 
         [HttpGet]
-        public ActionResult<RiskProfile> GetRiskProfile([DefaultValue(10592272)][Required] string IdEntity,
-                                                        [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
-                                                        [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
-                                                        [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
-                                                        [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser)
+        public async Task<ActionResult<RiskProfile>> GetRiskProfile([DefaultValue(10592272)][Required] string IdEntity,
+                                                                    [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
+                                                                    [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
+                                                                    [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
+                                                                    [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser)
 
         {
 
             using (OracleConnection objConn = new OracleConnection())
             {
 
-                objConn.ConnectionString = Startup.ConnectionString;
+                objConn.ConnectionString = Startup.GetConnectionString();
 
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
@@ -90,13 +87,13 @@ namespace PowerEntity.Controllers
 
                 try
                 {
-                    objConn.Open();
-                    objCmd.ExecuteNonQuery();
+                    await objConn.OpenAsync();
+                    await objCmd.ExecuteNonQueryAsync();
 
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
-                    objConn.Close();
+                    await objConn.CloseAsync();
 
                     if (_cderror != 0)
                     {
@@ -154,15 +151,15 @@ namespace PowerEntity.Controllers
         /// <response code="404">If not found</response>
         [HttpPut]
         [Route("/v1/[controller]/RiskProfile/{IdEntity}")]
-        [ProducesResponseType(typeof(RiskProfile), 201)]
+        [ProducesResponseType(201)]
         [ProducesResponseType(typeof(ErrorResponse400), 400)]
         [ProducesResponseType(typeof(ErrorResponse404), 404)]
-        public ActionResult<RiskProfile> PutRiskProfile([DefaultValue(10592272)][Required] string IdEntity,
-                                                        [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
-                                                        [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
-                                                        [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
-                                                        [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser,
-                                                        RiskProfile riskProfile)
+        public async Task<ActionResult<RiskProfile>> PutRiskProfile([DefaultValue(10592272)][Required] string IdEntity,
+                                                                    [DefaultValue("AGEAS")][FromHeader][Required] string IdCompany,
+                                                                    [DefaultValue("AGEAS")][FromHeader][Required] string IdNetwork,
+                                                                    [DefaultValue("DUCKCREEK")][FromHeader][Required] string BsSolution,
+                                                                    [DefaultValue("\\BS\\DUCKCREEKD")][FromHeader][Required] string BsUser,
+                                                                    RiskProfile riskProfile)
 
         {
 
@@ -178,7 +175,7 @@ namespace PowerEntity.Controllers
             using (OracleConnection objConn = new OracleConnection())
             {
 
-                objConn.ConnectionString = Startup.ConnectionString;
+                objConn.ConnectionString = Startup.GetConnectionString();
 
                 OracleCommand objCmd = new OracleCommand();
                 objCmd.Connection = objConn;
@@ -201,13 +198,13 @@ namespace PowerEntity.Controllers
 
                 try
                 {
-                    objConn.Open();
-                    objCmd.ExecuteNonQuery();
+                    await objConn.OpenAsync();
+                    await objCmd.ExecuteNonQueryAsync();
 
                     var _cderror = int.Parse(objCmd.Parameters["p_cderror"].Value.ToString());
                     var _dserror = objCmd.Parameters["p_dserror"].Value.ToString();
 
-                    objConn.Close();
+                    await objConn.CloseAsync();
 
                     if (_cderror != 0)
                     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PowerEntity.Model
+namespace PowerEntity.Models.Entities
 {
     public class Individual
     {

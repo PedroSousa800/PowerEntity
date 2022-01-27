@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PowerEntity.Model;
+using PowerEntity.Models.Entities;
 
-namespace PowerEntity.Model
+namespace PowerEntity.Models.Entities
 {
     public class IndividualOrganization
     {

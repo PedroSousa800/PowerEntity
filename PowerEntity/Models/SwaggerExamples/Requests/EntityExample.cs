@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using PowerEntity.Model;
+using PowerEntity.Models.Entities;
 using System.Globalization;
 
-namespace Swagger.Demo.SwaggerExamples.Requests
+namespace PowerEntity.Models.SwaggerExamples.Requests
 {
     public class EntityExample : IExamplesProvider<Entity>
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace PowerEntity.Model
+namespace PowerEntity.Models.Entities
 {
     public class BankAccount
     {

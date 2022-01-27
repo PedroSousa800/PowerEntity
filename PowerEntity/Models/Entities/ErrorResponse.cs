@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PowerEntity.Model
+namespace PowerEntity.Models.Entities
 {
     public class ErrorResponse
     {
